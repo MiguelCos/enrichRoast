@@ -76,6 +76,10 @@ if(file.exists("Data/ProcessedMSstatsData.Rda") | file.exists("Data/ProcessedMSs
                         
                         processed_msstats <- proteinSummarization(processed_msstats)
                         
+                        saveRDS(object = processed_msstats,
+                                file = here::here("Data/ProcessedMSstatsData.rds"))
+                        
+                        
             } else if (MSstatsType == "MSstats"){
             require(MSstats)
                         ## Run MSstats formating and normalization ----
@@ -87,6 +91,9 @@ if(file.exists("Data/ProcessedMSstatsData.Rda") | file.exists("Data/ProcessedMSs
                                                                  useUniquePeptide = TRUE)
                         
                         processed_msstats <- dataProcess(processed_msstats)
+                        
+                        saveRDS(object = processed_msstats,
+                                file = here::here("Data/ProcessedMSstatsData.rds"))
                         
             }
 
