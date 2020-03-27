@@ -297,58 +297,78 @@ if (enrichFunc == "GO"){
 
 write.table(x = roast_result$roastOutput,
             file = here::here(paste0("Outputs/Tabular_data/Roast_Output","_",enrichFunc,"_",ontology,"min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
-            sep = "\t")
+            sep = "\t",
+            row.names = FALSE)
 
 write.table(x = roast_result$GenesPerTerm,
             file = here::here(paste0("Outputs/Tabular_data/GenesPerEnrichTerm","_",enrichFunc,"_",ontology,"min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
-            sep = "\t")
+            sep = "\t",
+            row.names = FALSE)
 
 write.table(x = roast_result$log2FCs,
-            file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_",ontology,"min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")))
+            file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_",ontology,"min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+            sep = "\t",
+            row.names = FALSE)
 
 } else if (enrichFunc == "REACTOME"){
             write.table(x = roast_result$roastOutput,
                         file = here::here(paste0("Outputs/Tabular_data/Roast_Output","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
-                        sep = "\t")
+                        sep = "\t",
+                        row.names = FALSE)
             
             write.table(x = roast_result$GenesPerTerm,
                         file = here::here(paste0("Outputs/Tabular_data/GenesPerEnrichTerm","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
-                        sep = "\t")
+                        sep = "\t",
+                        row.names = FALSE)
             
             write.table(x = roast_result$log2FCs,
-                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")))
+                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        sep = "\t",
+                        row.names = FALSE)
             
             write.table(x = roast_result$ExclusionList,
-                        file = here::here(paste0("Outputs/Tabular_data/Blacklist_of_terms","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")))
+                        file = here::here(paste0("Outputs/Tabular_data/Blacklist_of_terms","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        sep = "\t",
+                        row.names = FALSE)
             
 } else if (enrichFunc == "KEGG"){
             
             write.table(x = roast_result$roastOutput,
                         file = here::here(paste0("Outputs/Tabular_data/Roast_Output","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
-                        sep = "\t")
+                        sep = "\t",
+                        row.names = FALSE)
             
             write.table(x = roast_result$GenesPerTerm,
                         file = here::here(paste0("Outputs/Tabular_data/GenesPerEnrichTerm","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
-                        sep = "\t")
+                        sep = "\t",
+                        row.names = FALSE)
             
             write.table(x = roast_result$log2FCs,
-                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")))
+                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        sep = "\t",
+                        row.names = FALSE)
             
-            write.table(x = roast_result$ExclusionList,
-                        file = here::here(paste0("Outputs/Tabular_data/Blacklist_of_terms","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")))
+            write.table(x = roast_result$exclusionList,
+                        file = here::here(paste0("Outputs/Tabular_data/Blacklist_of_terms","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        sep = "\t",
+                        row.names = FALSE)
             
 } else if (enrichFunc == "MSIGDB"){
             
             write.table(x = roast_result$roastOutput,
                         file = here::here(paste0("Outputs/Tabular_data/Roast_Output","_",enrichFunc,"_",category,"_",subcategory,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
-                        sep = "\t")
+                        sep = "\t",
+                        row.names = FALSE)
             
             write.table(x = roast_result$GenesPerTerm,
                         file = here::here(paste0("Outputs/Tabular_data/GenesPerEnrichTerm","_",enrichFunc,"_",category,"_",subcategory,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
-                        sep = "\t")
+                        sep = "\t",
+                        row.names = FALSE)
             
             write.table(x = roast_result$log2FCs,
-                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_",category,"_",subcategory,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")))
+                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_",category,"_",subcategory,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        sep = "\t",
+                        row.names = FALSE)
             
 }
 
