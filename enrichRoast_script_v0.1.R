@@ -9,7 +9,7 @@ datasetcode <- "MFA254-266"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
-enrichFunc <- "MSIGDB"
+enrichFunc <- "REACTOME"
 
 ## *-2. ORGANISM DATABASE (Please input the name of the Bioconductor org.db you need: i.e. "org.Hs.eg.db" for human) ----
 
@@ -21,8 +21,15 @@ species <- "Homo sapiens" # this can be any resulting from calling msigdbr::msig
 geneIDtype <- "UNIPROT"
 
 ## *-4. MINIMUM AND MAXIMUM SIZE OF THE GENE SETS YOU WANT TO TEST ----
+# This depends if you want to look at general or specific terms.
+# For more general enrichment, set your set sizes >  100; 
+# If you want evaluate very specific pathways, it might be a better idea te set them < 100
+# Example: for specific pathway enrichment:
+# You will look if your proteins only appear within pathways with between 5 and 80 components.
+# minSetSize = 5
+# maxSetSize = 80 
 
-minSetSize = 10
+minSetSize = 100
 maxSetSize = 500
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS (set to 999 for exploration and 9999 for final p-value) ----
@@ -44,7 +51,7 @@ MSstatsType <- "MSstats"
 ### * 7.1. PROPORTIONS PLOT ---
 
 #### * 7.1.1 HOW MANY ENRICHED TERMNS DO YOU WANT TO PLOT?
-show_n_terms <- 40 # how many enriched terms do you want to plot?
+show_n_terms <- 30 # how many enriched terms do you want to plot?
 
 #### * 7.1.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 
@@ -54,7 +61,7 @@ colorby <- "PValue"
 ### * 7.2. RIDGELINE DENSITY PLOTS ---
 
 #### * 7.2.1 HOW MANY ENRICHED TERMNS DO YOU WANT TO PLOT?
-show_n_terms <- 40 # how many enriched terms do you want to plot?
+show_n_terms <- 30 # how many enriched terms do you want to plot?
 
 #### * 7.2.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 
@@ -87,7 +94,7 @@ exclusionList <- TRUE
 
 #### * 8.3.2 ORGANISM NAME IN KEGG TERMS (i.e. human = "hsa"; mouse = "mmu"; ...)
 
-organism <- 'hsa'
+organism <- NULL
 
 ### * 8.4 IF 'MSIGDB' ENRICHMENT WILL BE PERFORMED ----
 
@@ -97,9 +104,9 @@ organism <- 'hsa'
 # subcategory = "CP"
 # specific_category = "NABA"
 
-category = "H" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+category = NULL # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
 subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
-specific_category = NULL # i.e. "NABA"... A string that can be used to subset your categories.
+specific_category = NULL  # i.e. "NABA"... A string that can be used to subset your categories.
 
 
 # EXECUTION OF THE SCRIPT; DON'T MODIFY ANYTHING FROM NOW ON ----  
