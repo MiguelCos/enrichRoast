@@ -1,3 +1,15 @@
+data = roast_input$tabular_data
+geneIDtype = geneIDtype
+orgDB = orgDB
+organism = organism # here the sintax should correspond with the  sintax
+design = roast_input$design
+n_rotations = n_rotations
+minSetSize = minSetSize
+maxSetSize = maxSetSize
+pvalueCutoff = pvalueCutoff
+exclusionList = exclusionList
+
+
 roastKEGG <- function(data,
                       geneIDtype = "SYMBOL",
                       orgDB = "org.Hs.eg.db",
@@ -160,19 +172,20 @@ roastKEGG <- function(data,
          
       }
       
+         leindex <- sapply(list_path2entrez, length)
+      
+         sublogi1 <- between(leindex, minSetSize, maxSetSize) 
+         list_path2entrez <- list_path2entrez[sublogi1] 
+         
+         
          index <- limma::ids2indices(gene.sets = list_path2entrez,
                                      identifiers = genesindata,
                                      remove.empty = TRUE)
          
-         leindex <- sapply(index, length)
-         
-         sublogi1 <- between(leindex, minSetSize, maxSetSize) 
-         index2 <- index[sublogi1] 
-         
          index2id <- tibble(index = seq_along(genesindata),
                             ID = genesindata)
          
-         genesinterm <- qdapTools::list2df(index2,
+         genesinterm <- qdapTools::list2df(index,
                                            col1 = "index",
                                            col2 = "KEGGID") %>% 
             left_join(., index2id, by = "index") %>% 
@@ -204,7 +217,7 @@ roastKEGG <- function(data,
                          contrast= ncol(design),
                          design = design, 
                          nrot = n_rotations, 
-                         index = index2)
+                         index = index)
       
       
       ## Process output ----

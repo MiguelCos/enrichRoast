@@ -104,19 +104,20 @@ roastMSigDB <- function(data,
       list_msig <- msigtab %>% split(x = .$gene_symbol, 
                                      f = .$gs_id)
       
+      lenindex <- sapply(list_msig, length)
+      
+      sublogi1 <- between(lenindex, minSetSize, maxSetSize) 
+      list_msig <- list_msig[sublogi1]  
+      
       index <- limma::ids2indices(gene.sets = list_msig,
                                   identifiers = genesindata,
                                   remove.empty = TRUE)
       
-      lenindex <- sapply(index, length)
-      
-      sublogi1 <- between(lenindex, minSetSize, maxSetSize) 
-      index2 <- index[sublogi1]  
       
       index2id <- tibble(index = seq_along(genesindata),
                          ID = genesindata)
       
-      genesinterm <- qdapTools::list2df(index2,
+      genesinterm <- qdapTools::list2df(index,
                                         col1 = "index",
                                         col2 = "gs_id") %>% 
          dplyr::left_join(., index2id, by = "index") %>% 
@@ -128,7 +129,7 @@ roastMSigDB <- function(data,
                          contrast= ncol(design),
                          design = design, 
                          nrot = n_rotations, 
-                         index = index2)
+                         index = index)
       
       # Process ROAST output ----
       suppressWarnings(suppressMessages(
