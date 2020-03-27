@@ -9,7 +9,7 @@ datasetcode <- "MFA254-266"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
-enrichFunc <- "GO"
+enrichFunc <- "KEGG"
 
 ## *-2. ORGANISM DATABASE (Please input the name of the Bioconductor org.db you need: i.e. "org.Hs.eg.db" for human) ----
 
@@ -23,7 +23,7 @@ geneIDtype <- "UNIPROT"
 ## *-4. MINIMUM AND MAXIMUM SIZE OF THE GENE SETS YOU WANT TO TEST ----
 
 minSetSize = 100
-maxSetSize = 400
+maxSetSize = 600
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS (set to 999 for exploration and 9999 for final p-value) ----
 
@@ -44,7 +44,7 @@ MSstatsType <- "MSstats"
 ### * 7.1. PROPORTIONS PLOT ---
 
 #### * 7.1.1 HOW MANY ENRICHED TERMNS DO YOU WANT TO PLOT?
-show_n_terms <- 25 # how many enriched terms do you want to plot?
+show_n_terms <- 40 # how many enriched terms do you want to plot?
 
 #### * 7.1.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 
@@ -53,10 +53,10 @@ colorby <- "PValue"
 
 ### * 7.2. RIDGELINE DENSITY PLOTS ---
 
-#### * 7.1.1 HOW MANY ENRICHED TERMNS DO YOU WANT TO PLOT?
-show_n_terms <- 25 # how many enriched terms do you want to plot?
+#### * 7.2.1 HOW MANY ENRICHED TERMNS DO YOU WANT TO PLOT?
+show_n_terms <- 40 # how many enriched terms do you want to plot?
 
-#### * 7.1.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
+#### * 7.2.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
 colorby <- "PValue" 
@@ -69,31 +69,31 @@ colorby <- "PValue"
 
 #### * 8.1.1. WHICH GO ONTOLOGY YOU DO WANT TO EXPLORE? (one of: "MF", "CC" or "BP") ----
 
-ontology = "CC"
+ontology = NULL
 
 #### * 8.1.2. DO YOU WANT TO REMOVE REDUNDANT GO TERMS?
 
-simplify <- TRUE
-cutoff <- 0.7 # how similar should be two GO terms to be considered redundant?
-by = "FDR" # if two terms are equally similar, which condition you want to use to select between them
+simplify <- NULL
+cutoff <- NULL # how similar should be two GO terms to be considered redundant?
+by = NULL # if two terms are equally similar, which condition you want to use to select between them
 
 ### * 8.2. IF "REACTOME" OR "KEGG" ENRICHMENT WILL BE PERFORMED ---- 
 
 #### * 8.2.1 DO YOU WANT TO USE A EXCLUSION LIST TO REMOVE NON-INTERSTING TERMS FROM THE FINAL OUTPUT?
 
-exclusionList <- FALSE
+exclusionList <- TRUE
 
 ### * 8.3 IF "KEGG" ENRICHMENT WILL BE PERFORMED ----
 
 #### * 8.3.2 ORGANISM NAME IN KEGG TERMS (i.e. human = "hsa"; mouse = "mmu"; ...)
 
-organism <- NULL
+organism <- 'hsa'
 
 ### * 8.4 IF 'MSIGDB' ENRICHMENT WILL BE PERFORMED ----
 
 #### * 8.4.1 SET SPECIFIC DATABASE PARAMETERS 
 
-category = "H" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+category = NULL # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
 subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
 specific_category = NULL # i.e. "NABA"... A string that can be used to subset your categories.
 
@@ -318,6 +318,9 @@ write.table(x = roast_result$log2FCs,
             write.table(x = roast_result$log2FCs,
                         file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")))
             
+            write.table(x = roast_result$ExclusionList,
+                        file = here::here(paste0("Outputs/Tabular_data/Blacklist_of_terms","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")))
+            
 } else if (enrichFunc == "KEGG"){
             
             write.table(x = roast_result$roastOutput,
@@ -330,6 +333,9 @@ write.table(x = roast_result$log2FCs,
             
             write.table(x = roast_result$log2FCs,
                         file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")))
+            
+            write.table(x = roast_result$ExclusionList,
+                        file = here::here(paste0("Outputs/Tabular_data/Blacklist_of_terms","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")))
             
 } else if (enrichFunc == "MSIGDB"){
             
