@@ -387,7 +387,9 @@ write.table(x = roast_result$log2FCs,
 
 
 prochttofig  <- prochangeplot + 
-                labs(caption = datasetcode)+
+                labs(caption = datasetcode,
+                     subtitle = paste("Positive values = Proportion of up-regulated proteins in",
+                                      Conditions[2]))+
             theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5, size = 11),
                   axis.text.y = element_text(size = 11),
                   panel.background = element_blank(),
@@ -401,7 +403,9 @@ prochttofig  <- prochangeplot +
 prochttofig
 
 ridgelinetofig <- ridgelineroast +
-                labs(caption = datasetcode)+
+                labs(caption = datasetcode,
+                     subtitle = paste("> 0 indicates positive regulation in",
+                                      Conditions[2]))+
             theme(axis.text.x = element_text(hjust = 0.5, size = 11),
                   axis.text.y = element_text(size = 11),
                   panel.background = element_blank(),
