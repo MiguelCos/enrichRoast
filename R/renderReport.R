@@ -44,10 +44,11 @@ print(ridgelinetofig)
 #' 
 #' * Blacklist: `r exclusionList`
 #' * Exclusion message: `r excl`
+#' * Organism: `r organism`
+#' * Species: `r species`
 #' 
 #' #### roastMSigDB parameters set: 
-#' 
-#' * Organism: `r organism` 
+#'  
 #' * Category: `r category`
 #' * Subcategory: `r subcategory`
 #' * Specific category: `r specific_category`
