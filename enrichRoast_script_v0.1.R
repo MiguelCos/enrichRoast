@@ -97,9 +97,9 @@ organism <- 'hsa'
 # subcategory = "CP"
 # specific_category = "NABA"
 
-category = "C2" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
-subcategory = "CP" # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
-specific_category = "NABA" # i.e. "NABA"... A string that can be used to subset your categories.
+category = "H" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
+specific_category = NULL # i.e. "NABA"... A string that can be used to subset your categories.
 
 
 # EXECUTION OF THE SCRIPT; DON'T MODIFY ANYTHING FROM NOW ON ----  
@@ -458,5 +458,6 @@ ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot","_",enrichF
 excl <- roast_result$ExclusionMessage
 
 rmarkdown::render(input = here::here("R/renderReport.R"),
-                  output_file = here::here(paste0("Outputs/Analysis_report","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".html")))
+                  output_file = here::here(paste0("Outputs/Analysis_report","_",enrichFunc,ontology,category,subcategory,specific_category,
+                                                  "_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".html")))
 
