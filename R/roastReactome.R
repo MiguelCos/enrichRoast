@@ -116,12 +116,31 @@ roastReactome <- function(data,
          dplyr::filter(str_detect(PATHNAME, paste0(species,": "))) %>%
          dplyr::filter(str_detect(PATHNAME, "Infection"))
       
+      exluded6 <- toexclude %>% 
+         dplyr::filter(str_detect(PATHNAME, paste0(species,": "))) %>%
+         dplyr::filter(str_detect(PATHNAME, "Viral"))
+      
+      exluded9 <- toexclude %>% 
+         dplyr::filter(str_detect(PATHNAME, paste0(species,": "))) %>%
+         dplyr::filter(str_detect(PATHNAME, "viral"))
+      
+      exluded7 <- toexclude %>% 
+         dplyr::filter(str_detect(PATHNAME, paste0(species,": "))) %>%
+         dplyr::filter(str_detect(PATHNAME, "Influenza"))
+      
+      exluded8 <- toexclude %>% 
+         dplyr::filter(str_detect(PATHNAME, paste0(species,": "))) %>%
+         dplyr::filter(str_detect(PATHNAME, "influenza"))
       
       reactome_excluded <- bind_rows(exluded1,
                                      exluded2,
                                      exluded3,
                                      exluded4,
-                                     exluded5) 
+                                     exluded5,
+                                     exluded6,
+                                     exluded7,
+                                     exluded8,
+                                     exluded9) 
       
       pathexcl <- reactome_excluded$PATHID
       
