@@ -1,10 +1,5 @@
 ## ridgeplotRoast function ----
 
-roastOutput = roast_result
-show_n_terms = 25
-colorby = "PValue"
-
-
 ridgeplotRoast <- function(roastOutput,
                            show_n_terms = 25,
                            colorby = "FDR"){
