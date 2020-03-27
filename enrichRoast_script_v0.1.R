@@ -9,7 +9,7 @@ datasetcode <- "MFA254-266"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
-enrichFunc <- "KEGG"
+enrichFunc <- "MSIGDB"
 
 ## *-2. ORGANISM DATABASE (Please input the name of the Bioconductor org.db you need: i.e. "org.Hs.eg.db" for human) ----
 
@@ -22,8 +22,8 @@ geneIDtype <- "UNIPROT"
 
 ## *-4. MINIMUM AND MAXIMUM SIZE OF THE GENE SETS YOU WANT TO TEST ----
 
-minSetSize = 100
-maxSetSize = 600
+minSetSize = 10
+maxSetSize = 500
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS (set to 999 for exploration and 9999 for final p-value) ----
 
@@ -91,11 +91,15 @@ organism <- 'hsa'
 
 ### * 8.4 IF 'MSIGDB' ENRICHMENT WILL BE PERFORMED ----
 
-#### * 8.4.1 SET SPECIFIC DATABASE PARAMETERS 
+#### * 8.4.1 SET SPECIFIC DATABASE PARAMETERS
+# For example: if you want to check for Matrisome/ECM components:
+# category = "C2"
+# subcategory = "CP"
+# specific_category = "NABA"
 
-category = NULL # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
-subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
-specific_category = NULL # i.e. "NABA"... A string that can be used to subset your categories.
+category = "C2" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+subcategory = "CP" # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
+specific_category = "NABA" # i.e. "NABA"... A string that can be used to subset your categories.
 
 
 # EXECUTION OF THE SCRIPT; DON'T MODIFY ANYTHING FROM NOW ON ----  
