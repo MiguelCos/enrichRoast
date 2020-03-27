@@ -10,7 +10,7 @@
 #'  
 #'### Visualization of results:  
 #' 
-#'##### Showing the top `r show_n_terms` by the number of proteins identified within them. 
+#'##### Showing the top `r show_n_terms` categories by the number of proteins identified within them. 
 #' 
 #+ fig.width=11.7, fig.height= 7.1, echo = FALSE
 print(prochttofig)
