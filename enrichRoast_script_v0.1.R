@@ -23,7 +23,7 @@ geneIDtype <- "UNIPROT"
 ## *-4. MINIMUM AND MAXIMUM SIZE OF THE GENE SETS YOU WANT TO TEST ----
 # This depends if you want to look at general or specific terms.
 # For more general enrichment, set your set sizes >  100; 
-# If you want evaluate very specific pathways, it might be a better idea te set them < 100
+# If you want evaluate very specific pathways, it might be a better idea to set them < 100
 # Example: for specific pathway enrichment:
 # You will look if your proteins only appear within pathways with between 5 and 80 components.
 # minSetSize = 5
