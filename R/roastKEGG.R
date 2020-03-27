@@ -1,15 +1,3 @@
-data = roast_input$tabular_data
-geneIDtype = geneIDtype
-orgDB = orgDB
-organism = organism # here the sintax should correspond with the  sintax
-design = roast_input$design
-n_rotations = n_rotations
-minSetSize = minSetSize
-maxSetSize = maxSetSize
-pvalueCutoff = pvalueCutoff
-exclusionList = exclusionList
-
-
 roastKEGG <- function(data,
                       geneIDtype = "SYMBOL",
                       orgDB = "org.Hs.eg.db",
