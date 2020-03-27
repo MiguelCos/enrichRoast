@@ -178,7 +178,7 @@ roastKEGG <- function(data,
                                            col2 = "KEGGID") %>% 
             left_join(., index2id, by = "index") %>% 
             dplyr::select(-index) %>% 
-            rename(ENTREZID = ID)
+            dplyr::rename(ENTREZID = ID)
          
       
             suppressWarnings(
