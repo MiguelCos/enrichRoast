@@ -1,4 +1,17 @@
 ## roastGO function ----
+
+#data = tabular_data
+#geneIDtype = geneIDtype
+#orgDB = orgDB
+#design = design
+#n_rotations = 99
+#minSetSize = minSetSize
+#maxSetSize = maxSetSize
+#pvalueCutoff = pvalueCutoff
+#exclusionList = exclusionList
+#Paired = FALSE
+#ontology = "MF"
+
 roastGO <- function(data,
                     geneIDtype = "SYMBOL",
                     ontology = "MF",
@@ -7,7 +20,8 @@ roastGO <- function(data,
                     n_rotations = 9999,
                     minSetSize = 1,
                     maxSetSize = 1506,
-                    pvalueCutoff = 0.05){
+                    pvalueCutoff = 0.05,
+                    Paired = FALSE){
       
       ## Load required packages ----
       require(orgDB, character.only = TRUE) || stop(paste("package", organism, "is required", sep = " "))
@@ -155,7 +169,7 @@ roastGO <- function(data,
       suppressWarnings(
          suppressMessages(
             log2FCs <- dplyr::mutate(limma_tab,
-                                     ID = row.names(limma_tab)) %>%  
+                                     ID =row.names(limma_tab)) %>%  
                dplyr::select(ID, log2FC = logFC) %>% 
                dplyr::left_join(., genesinterm, by = "ID")  %>%
                dplyr::left_join(., goterm_n_iddf, by = c("GOID", "GOTERM")) %>%

@@ -1,8 +1,4 @@
 
-enrichRoastGO = roast_result
-cutoff = 0.7
-by = "FDR"
-
 
 simplifyGO <- function(enrichRoastGO, cutoff = 0.7, by = "FDR"){
       

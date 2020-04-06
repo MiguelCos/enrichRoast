@@ -1,17 +1,17 @@
 ## roastMSigDB function ----
 
-#data = roast_input$tabular_data
-#geneIDtype = geneIDtype
-#orgDB = orgDB
-#species = species # this can be any resulting from calling msigdbr::msigdbr_show_species()
-#category = category # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
-#subcategory = subcategory
-#specific_category = specific_category
-#design = roast_input$design
-#n_rotations = n_rotations
-#minSetSize = minSetSize
-#maxSetSize = maxSetSize
-#pvalueCutoff = pvalueCutoff
+data = tabular_data
+geneIDtype = geneIDtype
+orgDB = orgDB
+species = species # this can be any resulting from calling msigdbr::msigdbr_show_species()
+category = category # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+subcategory = subcategory
+specific_category = specific_category
+design = design
+n_rotations = n_rotations
+minSetSize = minSetSize
+maxSetSize = maxSetSize
+pvalueCutoff = pvalueCutoff
 
 roastMSigDB <- function(data,
                         geneIDtype = "SYMBOL",
@@ -24,7 +24,8 @@ roastMSigDB <- function(data,
                         n_rotations = 999,
                         minSetSize = 1,
                         maxSetSize = 200,
-                        pvalueCutoff = 0.05){
+                        pvalueCutoff = 0.05,
+                        Paired = FALSE){
       
       ## Load required packages ----  
       require(orgDB, character.only = TRUE) || stop(paste("package", orgDB, "is required", sep=" "))
@@ -192,7 +193,7 @@ roastMSigDB <- function(data,
          suppressWarnings(
             suppressMessages(
                log2FCs <- dplyr::mutate(limma_tab,
-                                        ID = row.names(limma_tab))  %>% 
+                                        ID = ID)  %>% 
                   dplyr::filter(ID %in% genesinterm$ID) %>% 
                   dplyr::select(log2FC = logFC, ID) %>% 
                   dplyr::left_join(., genesintermread, by = "ID")  %>%

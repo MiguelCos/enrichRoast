@@ -1,14 +1,15 @@
 ### ROAST - Reactome function ----
 
-#data = roast_input$tabular_data
+#data = tabular_data
 #geneIDtype = geneIDtype
 #orgDB = orgDB
-#design = roast_input$design
-#n_rotations = n_rotations
+#design = design
+#n_rotations = 99
 #minSetSize = minSetSize
 #maxSetSize = maxSetSize
-#pvalueCutoff = pvalueCutoff
-#exclusionList = exclusionList
+#pvalueCutoff = 0.05
+#exclusionList = TRUE
+#Paired = FALSE
 
 
 roastReactome <- function(data, 
@@ -20,7 +21,8 @@ roastReactome <- function(data,
                           maxSetSize = 1506,
                           pvalueCutoff = 0.05,
                           exclusionList = TRUE,
-                          species = "Homo sapiens"){
+                          species = "Homo sapiens",
+                          Paired = FALSE){
       
       ## Load required packages
       require(orgDB, character.only = TRUE) || stop(paste("package", orgDB, "is required", sep=" "))
@@ -244,7 +246,7 @@ roastReactome <- function(data,
    
    suppressWarnings(
       suppressMessages(
-         limma_out <- lmFit(object = matrix1,
+        limma_out <- lmFit(object = matrix1,
                             design = design)
       ))
    
@@ -261,7 +263,7 @@ roastReactome <- function(data,
    suppressWarnings(
       suppressMessages(
          log2FCs <- dplyr::mutate(limma_tab,
-                                  ENTREZID = row.names(limma_tab)) %>% 
+                                  ENTREZID = ID) %>% 
             dplyr::filter(ENTREZID %in% symb1$ENTREZID) %>% 
             dplyr::select(log2FC = eval(dim(.)[2]-5),ENTREZID) %>% 
             dplyr::left_join(., genesintermread, by = "ENTREZID") %>% ## Look for a way to extract the z-score values as they are used by the ROAST algorithm
@@ -270,17 +272,17 @@ roastReactome <- function(data,
             dplyr::filter(is.na(FDR) == FALSE)
       ))
    } else if(Paired == FALSE){
-      suppressWarnings(
-         suppressMessages(
+      #suppressWarnings(
+         #suppressMessages(
             log2FCs <- dplyr::mutate(limma_tab,
-                                     ENTREZID = row.names(limma_tab)) %>% 
+                                     ENTREZID = ID) %>% 
                dplyr::filter(ENTREZID %in% symb1$ENTREZID) %>% 
                dplyr::select(log2FC = logFC, ENTREZID) %>% 
                dplyr::left_join(., genesintermread, by = "ENTREZID") %>% ## Look for a way to extract the z-score values as they are used by the ROAST algorithm
                dplyr::select(log2FC, ENTREZID, SYMBOL, CategoryID = PATHID, CategoryTerm = PATHNAME) %>% 
                dplyr::left_join(.,fdrnterm, by = "CategoryTerm") %>%
                dplyr::filter(is.na(FDR) == FALSE)
-         ))
+         #))
    }
    suppressWarnings(suppressMessages(
       

@@ -1,13 +1,14 @@
 roastKEGG <- function(data,
                       geneIDtype = "SYMBOL",
                       orgDB = "org.Hs.eg.db",
-                      organism = "hsa", # here the sintax should correspond with the  sintax
+                      organism = "mmu", # here the sintax should correspond with the  sintax
                       design,
                       n_rotations = 999,
                       minSetSize = 1,
                       maxSetSize = 1000,
                       pvalueCutoff = 0.05,
-                      exclusionList = TRUE) {
+                      exclusionList = TRUE,
+                      Paired = FALSE) {
       
    ## Load required packages ----
       
@@ -247,7 +248,7 @@ roastKEGG <- function(data,
       suppressWarnings(
          suppressMessages(
             log2FCs <- dplyr::mutate(limma_tab,
-                                     ENTREZID = row.names(limma_tab)) %>%  
+                                     ENTREZID = ID) %>%  
                dplyr::select(ENTREZID, log2FC = eval(dim(.)[2]-5)) %>% 
                dplyr::left_join(., genesinterm, by = "ENTREZID")  %>%
                dplyr::left_join(., keggidtoterm_df, by = c("KEGGID", "KEGGTERM")) %>%
@@ -260,7 +261,7 @@ roastKEGG <- function(data,
          suppressWarnings(
             suppressMessages(
                log2FCs <- dplyr::mutate(limma_tab,
-                                        ENTREZID = row.names(limma_tab)) %>%  
+                                        ENTREZID = ID) %>%  
                   dplyr::select(ENTREZID, log2FC = logFC) %>% 
                   dplyr::left_join(., genesinterm, by = "ENTREZID")  %>%
                   dplyr::left_join(., keggidtoterm_df, by = c("KEGGID", "KEGGTERM")) %>%
