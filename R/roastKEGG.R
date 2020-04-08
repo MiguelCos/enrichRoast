@@ -159,6 +159,8 @@ roastKEGG <- function(data,
          list_path2entrez <- split(x = names(path2entrez),
                                    f = path2entrez)
          
+         excluded <- NULL
+         
       }
       
          leindex <- sapply(list_path2entrez, length)
@@ -302,6 +304,12 @@ roastKEGG <- function(data,
          
          exclumess <- paste("Pathways associated with the next category classes were excluded from the analysis:",
                             exclusion_class,"; ",paste(exclusion_subclass, sep = " ", collapse = "; "))
+         
+         roastResult$exclusionList <- excluded
+         roastResult$exclusionMessage <- exclumess
+      } else {
+         
+         exclumess <- "No pathway was excluded from the analysis"
          
          roastResult$exclusionList <- excluded
          roastResult$exclusionMessage <- exclumess

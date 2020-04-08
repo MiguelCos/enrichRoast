@@ -283,7 +283,7 @@ source("R/ridgleplotRoast.R")
 
 ridgelineroast <- ridgeplotRoast(roast_result,
                                  show_n_terms = show_n_terms,
-                                 colorby = "PValue")
+                                 colorby = colorby)
 
 
 ## Generate outputs ----

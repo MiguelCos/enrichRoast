@@ -1,17 +1,4 @@
 ### ROAST - Reactome function ----
-
-#data = tabular_data
-#geneIDtype = geneIDtype
-#orgDB = orgDB
-#design = design
-#n_rotations = 99
-#minSetSize = minSetSize
-#maxSetSize = maxSetSize
-#pvalueCutoff = 0.05
-#exclusionList = TRUE
-#Paired = FALSE
-
-
 roastReactome <- function(data, 
                           geneIDtype = "SYMBOL", 
                           orgDB = "org.Hs.eg.db",
@@ -309,8 +296,14 @@ roastReactome <- function(data,
       
       exclumess <- "Pathways associated with human diseases, disorders and infections where excluded from de analysis"
       
-      roastResult$ExclusionList <- reactome_excluded
-      roastResult$ExclusionMessage <- exclumess
+      roastResult$exclusionList <- reactome_excluded
+      roastResult$exclusionMessage <- exclumess
+      
+   } else {
+      exclumess <- "No pathways were excluded from the analysis"
+      
+      roastResult$exclusionList <- NULL
+      roastResult$exclusionMessage <- exclumess
       
    }
    

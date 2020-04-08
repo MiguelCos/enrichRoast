@@ -8,11 +8,11 @@
 
 ## PLEASE GIVE A CODE TO IDENTIFY YOUR DATA ----
 
-datasetcode <- "Test_run_1"
+datasetcode <- "Test_run_2"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
-enrichFunc <- "GO"
+enrichFunc <- "KEGG"
 
 ## *-2. ORGANISM DATABASE (Please input the name of the Bioconductor org.db you need: i.e. "org.Hs.eg.db" for human) ----
 
@@ -32,13 +32,13 @@ geneIDtype <- "UNIPROT"
 # minSetSize = 5
 # maxSetSize = 80 
 
-minSetSize = 100
-maxSetSize = 500
+minSetSize = 50
+maxSetSize = 550
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS (set to 999 for exploration and 9999 for final p-value) ----
 
 pvalueCutoff <- 0.05
-n_rotations = 9999
+n_rotations = 99
 
 ## *-6 EXPERIMENTAL DESIGN ----
 
@@ -59,7 +59,7 @@ show_n_terms <- 30 # how many enriched terms do you want to plot?
 #### * 7.1.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
-colorby <- "PValue" 
+colorby <- "FDR" 
 
 ### * 7.2. RIDGELINE DENSITY PLOTS ---
 
@@ -69,7 +69,7 @@ show_n_terms <- 30 # how many enriched terms do you want to plot?
 #### * 7.2.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
-colorby <- "PValue" 
+colorby <- "FDR" 
 
 ## *-8. OPTIONAL PARAMETERS: FILL THESE UP DEPENDING ON WHAT YOU CHOOSE IN SECTION *-1. ----
 
@@ -79,25 +79,25 @@ colorby <- "PValue"
 
 #### * 8.1.1. WHICH GO ONTOLOGY YOU DO WANT TO EXPLORE? (one of: "MF", "CC" or "BP") ----
 
-ontology = "MF"
+ontology = NULL
 
 #### * 8.1.2. DO YOU WANT TO REMOVE REDUNDANT GO TERMS?
 
-simplify <- TRUE
-cutoff <- 0.7 # how similar should be two GO terms to be considered redundant?
-by = "FDR" # if two terms are equally similar, which condition you want to use to select between them ("FDR")
+simplify <- NULL
+cutoff <- NULL # how similar should be two GO terms to be considered redundant?
+by = NULL # if two terms are equally similar, which condition you want to use to select between them ("FDR")
 
 ### * 8.2. IF "REACTOME" OR "KEGG" ENRICHMENT WILL BE PERFORMED ---- 
 
 #### * 8.2.1 DO YOU WANT TO USE A EXCLUSION LIST TO REMOVE NON-INTERSTING TERMS FROM THE FINAL OUTPUT?
 
-exclusionList <- NULL
+exclusionList <- FALSE
 
 ### * 8.3 IF "KEGG" ENRICHMENT WILL BE PERFORMED ----
 
 #### * 8.3.2 ORGANISM NAME IN KEGG TERMS (i.e. human = "hsa"; mouse = "mmu"; ...)
 
-organism <- NULL
+organism <- 'mmu'
 
 ### * 8.4 IF 'MSIGDB' ENRICHMENT WILL BE PERFORMED ----
 
@@ -116,7 +116,7 @@ specific_category = NULL  # i.e. "NABA"... A string that can be used to subset y
 
 ## Define experimental design ####
 
-experiment <- c(rep(2,condition1),rep(1,condition2))
+experiment <- c(rep(0,condition1),rep(1,condition2))
 design <- model.matrix(~experiment)
 Paired <- FALSE
 ## Load Limma input ####
@@ -206,7 +206,7 @@ source("R/ridgleplotRoast.R")
 
 ridgelineroast <- ridgeplotRoast(roast_result,
                                  show_n_terms = show_n_terms,
-                                 colorby = "PValue")
+                                 colorby = colorby)
 
 
 ## Generate outputs ----
