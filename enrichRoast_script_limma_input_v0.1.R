@@ -371,28 +371,28 @@ if (show_n_termsdens == 25){
 
 # For the proportion plot: 
 
-if (show_n_termsdensdens == 25){
+if (show_n_termsprop == 25){
         heightprop <- 180
         heightpropin <- heightprop/25.4
-} else if (show_n_termsdens <= 15){
+} else if (show_n_termsprop <= 15){
         heightprop <- 160
         heightpropin <- heightprop/25.4
-} else if (show_n_termsdens >= 30 & show_n_termsdens <= 40){
+} else if (show_n_termsprop >= 30 & show_n_termsprop <= 40){
         heightprop <- 190
         heightpropin <- heightprop/25.4
-} else if (show_n_termsdens >= 41 & show_n_termsdens <= 50){
+} else if (show_n_termsprop >= 41 & show_n_termsprop <= 50){
         heightprop <- 200
         heightpropin <- heightprop/25.4
-} else if (show_n_termsdens >= 51 & show_n_termsdens <= 60){
+} else if (show_n_termsprop >= 51 & show_n_termsprop <= 60){
         heightprop <- 210
         heightpropin <- heightprop/25.4
-} else if (show_n_termsdens >= 61 & show_n_termsdens <= 70){
+} else if (show_n_termsprop >= 61 & show_n_termsprop <= 70){
         heightprop <- 220
         heightpropin <- heightprop/25.4
-} else if (show_n_termsdens >= 71 & show_n_termsdens <= 100){
+} else if (show_n_termsprop >= 71 & show_n_termsprop <= 100){
         heightprop <- 235
         heightpropin <- heightprop/25.4
-} else if (show_n_termsdens >= 101){
+} else if (show_n_termsprop >= 101){
         heightprop <- 250
         heightpropin <- heightprop/25.4
 }
