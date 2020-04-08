@@ -12,7 +12,7 @@ datasetcode <- "Test_run_2"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
-enrichFunc <- "GO"
+enrichFunc <- "MSIGDB"
 
 ## *-2. ORGANISM DATABASE (Please input the name of the Bioconductor org.db you need: i.e. "org.Hs.eg.db" for human) ----
 
@@ -79,13 +79,13 @@ colorbydens <- "FDR"
 
 #### * 8.1.1. WHICH GO ONTOLOGY YOU DO WANT TO EXPLORE? (one of: "MF", "CC" or "BP") ----
 
-ontology = "BP"
+ontology = NULL
 
 #### * 8.1.2. DO YOU WANT TO REMOVE REDUNDANT GO TERMS?
 
-simplify <- TRUE
-cutoff <- 0.7 # how similar should be two GO terms to be considered redundant? (0.7 is recommended)
-by = "FDR" # if two terms are equally similar, which condition you want to use to select between them ("FDR")
+simplify <- NULL
+cutoff <- NULL # how similar should be two GO terms to be considered redundant? (0.7 is recommended)
+by = NULL # if two terms are equally similar, which condition you want to use to select between them ("FDR")
 
 ### * 8.2. IF "REACTOME" OR "KEGG" ENRICHMENT WILL BE PERFORMED ---- 
 
@@ -107,9 +107,9 @@ organism <- NULL
 # subcategory = "CP"
 # specific_category = "NABA"
 
-category = NULL # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
-subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
-specific_category = NULL  # i.e. "NABA"... A string that can be used to subset your categories.
+category = "C2" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+subcategory = "CP" # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
+specific_category = "NABA"  # i.e. "NABA"... A string that can be used to subset your categories.
 
 
 # SCRIPT EXECUTION ----
@@ -180,7 +180,7 @@ if (enrichFunc == "GO"){
             
             roast_result <- roastMSigDB(data = tabular_data,
                                         geneIDtype = geneIDtype,orgDB = orgDB,
-                                        design = esign,
+                                        design = design,
                                         n_rotations = n_rotations,
                                         minSetSize = minSetSize,
                                         maxSetSize = maxSetSize,
