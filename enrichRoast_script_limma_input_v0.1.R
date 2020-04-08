@@ -389,7 +389,7 @@ ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot","_",enrichF
        compression = "lzw")
 
 # Generate report ----
-excl <- roast_result$ExclusionMessage
+excl <- roast_result$exclusionMessage
 
 rmarkdown::render(input = here::here("R/renderReport.R"),
                   output_file = here::here(paste0("Outputs/Analysis_report","_",enrichFunc,ontology,category,subcategory,specific_category,
