@@ -32,8 +32,8 @@ geneIDtype <- "UNIPROT"
 # minSetSize = 5
 # maxSetSize = 80 
 
-minSetSize = 100
-maxSetSize = 500 
+minSetSize = 15
+maxSetSize = 250 
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS (set to 999 for exploration and 9999 for final p-value) ----
 
@@ -107,9 +107,9 @@ organism <- NULL
 # subcategory = "CP"
 # specific_category = "NABA"
 
-category = "C2" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
-subcategory = "CP" # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
-specific_category = "NABA"  # i.e. "NABA"... A string that can be used to subset your categories.
+category = "H" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
+specific_category = NULL  # i.e. "NABA"... A string that can be used to subset your categories.
 
 
 # SCRIPT EXECUTION ----

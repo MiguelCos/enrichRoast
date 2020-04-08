@@ -33,13 +33,22 @@ ridgeplotRoast <- function(roastOutput,
       
       datatab <- dplyr::filter(toridge,
                                CategoryTerm %in% unique(toproplot$CategoryTerm)) %>% 
-         dplyr::left_join(.,catid2PValue, by = "CategoryID") %>%
-         dplyr::arrange(-NGenes) 
-   
+         dplyr::left_join(.,catid2PValue, by = "CategoryID") #%>%
+      
+      summtab <-  dplyr::group_by(datatab, CategoryTerm) %>%
+         dplyr::summarise(meadianlo2FC = median(log2FC))
+      
+      datatab <- left_join(datatab, summtab, by = "CategoryTerm") %>% ungroup() %>%
+         dplyr::arrange(-meadianlo2FC)
+      
       # Plot ----
       
-      ridges <- ggplot(data = datatab, aes(x = log2FC, y = CategoryTerm, fill = eval(as.name(colorby))))+
-         scale_fill_gradient(low = "#477af8", high = "#ff3333", name = colorby)+
+      ridges <- ggplot(data = datatab, aes(x = log2FC, y = fct_reorder(CategoryTerm, meadianlo2FC), 
+                                           fill = eval(as.name(colorby))))+
+         scale_fill_gradient(high = "#0fabbc",
+                             low = '#fa163f',
+                             guide = guide_colourbar(reverse = TRUE),
+                             name = colorby)+
          geom_density_ridges()+
          xlab("Log2(Fold-change)")+ 
          ylab("Biological Category")+
