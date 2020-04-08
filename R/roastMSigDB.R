@@ -1,18 +1,4 @@
 ## roastMSigDB function ----
-
-#data = tabular_data
-#geneIDtype = geneIDtype
-#orgDB = orgDB
-#species = species # this can be any resulting from calling msigdbr::msigdbr_show_species()
-#category = category # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
-#subcategory = subcategory
-#specific_category = specific_category
-#design = design
-#n_rotations = n_rotations
-#minSetSize = minSetSize
-#maxSetSize = maxSetSize
-#pvalueCutoff = pvalueCutoff
-
 roastMSigDB <- function(data,
                         geneIDtype = "SYMBOL",
                         orgDB = "org.Hs.eg.db",
