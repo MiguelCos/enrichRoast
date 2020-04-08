@@ -12,7 +12,7 @@ datasetcode <- "Test_run_2"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
-enrichFunc <- "KEGG"
+enrichFunc <- "GO"
 
 ## *-2. ORGANISM DATABASE (Please input the name of the Bioconductor org.db you need: i.e. "org.Hs.eg.db" for human) ----
 
@@ -33,7 +33,7 @@ geneIDtype <- "UNIPROT"
 # maxSetSize = 80 
 
 minSetSize = 50
-maxSetSize = 550
+maxSetSize = 600 
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS (set to 999 for exploration and 9999 for final p-value) ----
 
@@ -54,22 +54,22 @@ Conditions <- c("Cntrl", "VpR") # Cntrl corresponds to condition1 and VpR corres
 ### * 7.1. PROPORTIONS PLOT ---
 
 #### * 7.1.1 HOW MANY ENRICHED TERMNS DO YOU WANT TO PLOT?
-show_n_terms <- 30 # how many enriched terms do you want to plot?
+show_n_termsprop <- 30 # how many enriched terms do you want to plot?
 
 #### * 7.1.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
-colorby <- "FDR" 
+colorbyprop <- "FDR" 
 
 ### * 7.2. RIDGELINE DENSITY PLOTS ---
 
 #### * 7.2.1 HOW MANY ENRICHED TERMNS DO YOU WANT TO PLOT?
-show_n_terms <- 30 # how many enriched terms do you want to plot?
+show_n_termsdens <- 30 # how many enriched terms do you want to plot?
 
 #### * 7.2.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
-colorby <- "FDR" 
+colorbydens <- "FDR" 
 
 ## *-8. OPTIONAL PARAMETERS: FILL THESE UP DEPENDING ON WHAT YOU CHOOSE IN SECTION *-1. ----
 
@@ -79,25 +79,25 @@ colorby <- "FDR"
 
 #### * 8.1.1. WHICH GO ONTOLOGY YOU DO WANT TO EXPLORE? (one of: "MF", "CC" or "BP") ----
 
-ontology = NULL
+ontology = "BP"
 
 #### * 8.1.2. DO YOU WANT TO REMOVE REDUNDANT GO TERMS?
 
-simplify <- NULL
-cutoff <- NULL # how similar should be two GO terms to be considered redundant?
-by = NULL # if two terms are equally similar, which condition you want to use to select between them ("FDR")
+simplify <- TRUE
+cutoff <- 0.7 # how similar should be two GO terms to be considered redundant? (0.7 is recommended)
+by = "FDR" # if two terms are equally similar, which condition you want to use to select between them ("FDR")
 
 ### * 8.2. IF "REACTOME" OR "KEGG" ENRICHMENT WILL BE PERFORMED ---- 
 
 #### * 8.2.1 DO YOU WANT TO USE A EXCLUSION LIST TO REMOVE NON-INTERSTING TERMS FROM THE FINAL OUTPUT?
 
-exclusionList <- FALSE
+exclusionList <- NULL
 
 ### * 8.3 IF "KEGG" ENRICHMENT WILL BE PERFORMED ----
 
 #### * 8.3.2 ORGANISM NAME IN KEGG TERMS (i.e. human = "hsa"; mouse = "mmu"; ...)
 
-organism <- 'mmu'
+organism <- NULL
 
 ### * 8.4 IF 'MSIGDB' ENRICHMENT WILL BE PERFORMED ----
 
@@ -197,16 +197,16 @@ if (enrichFunc == "GO"){
 source("R/propChangePlot.R")
 
 prochangeplot <- propChangePlot(roast_result,
-                                show_n_terms = show_n_terms,
-                                colorby = colorby)
+                                show_n_terms = show_n_termsprop,
+                                colorby = colorbyprop)
 
 # Ridge-line density plots -----
 
 source("R/ridgleplotRoast.R")
 
 ridgelineroast <- ridgeplotRoast(roast_result,
-                                 show_n_terms = show_n_terms,
-                                 colorby = colorby)
+                                 show_n_terms = show_n_termsdens,
+                                 colorby = colorbydens)
 
 
 ## Generate outputs ----
@@ -341,52 +341,83 @@ ridgelinetofig <- ridgelineroast +
 ridgelinetofig
 
 # Change plot height according to the number of terms shown ----
+# For the density plot: 
 
-if (show_n_terms == 25){
-            height <- 180
-            heightin <- height/25.4
-} else if (show_n_terms <= 15){
-            height <- 160
-            heightin <- height/25.4
-} else if (show_n_terms >= 30 & show_n_terms <= 40){
-            height <- 190
-            heightin <- height/25.4
-} else if (show_n_terms >= 41 & show_n_terms <= 50){
-            height <- 200
-            heightin <- height/25.4
-} else if (show_n_terms >= 51 & show_n_terms <= 60){
-            height <- 210
-            heightin <- height/25.4
-} else if (show_n_terms >= 61 & show_n_terms <= 70){
-            height <- 220
-            heightin <- height/25.4
-} else if (show_n_terms >= 71 & show_n_terms <= 100){
-            height <- 235
-            heightin <- height/25.4
-} else if (show_n_terms >= 101){
-            height <- 250
-            heightin <- height/25.4
+if (show_n_termsdensdens == 25){
+            heightdens <- 180
+            heightdensin <- heightdens/25.4
+} else if (show_n_termsdens <= 15){
+            heightdens <- 160
+            heightdensin <- heightdens/25.4
+} else if (show_n_termsdens >= 30 & show_n_termsdens <= 40){
+            heightdens <- 190
+            heightdensin <- heightdens/25.4
+} else if (show_n_termsdens >= 41 & show_n_termsdens <= 50){
+            heightdens <- 200
+            heightdensin <- heightdens/25.4
+} else if (show_n_termsdens >= 51 & show_n_termsdens <= 60){
+            heightdens <- 210
+            heightdensin <- heightdens/25.4
+} else if (show_n_termsdens >= 61 & show_n_termsdens <= 70){
+            heightdens <- 220
+            heightdensin <- heightdens/25.4
+} else if (show_n_termsdens >= 71 & show_n_termsdens <= 100){
+            heightdens <- 235
+            heightdensin <- heightdens/25.4
+} else if (show_n_termsdens >= 101){
+            heightdens <- 250
+            heightdensin <- heightdens/25.4
 }
 
-# Generate figure for prop-change plot ----
-ggsave(filename = here::here(paste0("Outputs/Figures/Prop_Change_Plot","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tiff")),
-       plot = prochttofig,
-       device = 'tiff',
-       width = 297,
-       height = height,
-       units = 'mm',
-       dpi = 300,
-       compression = "lzw")
+# For the proportion plot: 
+
+if (show_n_termsdensdens == 25){
+        heightprop <- 180
+        heightpropin <- heightprop/25.4
+} else if (show_n_termsdens <= 15){
+        heightprop <- 160
+        heightpropin <- heightprop/25.4
+} else if (show_n_termsdens >= 30 & show_n_termsdens <= 40){
+        heightprop <- 190
+        heightpropin <- heightprop/25.4
+} else if (show_n_termsdens >= 41 & show_n_termsdens <= 50){
+        heightprop <- 200
+        heightpropin <- heightprop/25.4
+} else if (show_n_termsdens >= 51 & show_n_termsdens <= 60){
+        heightprop <- 210
+        heightpropin <- heightprop/25.4
+} else if (show_n_termsdens >= 61 & show_n_termsdens <= 70){
+        heightprop <- 220
+        heightpropin <- heightprop/25.4
+} else if (show_n_termsdens >= 71 & show_n_termsdens <= 100){
+        heightprop <- 235
+        heightpropin <- heightprop/25.4
+} else if (show_n_termsdens >= 101){
+        heightprop <- 250
+        heightpropin <- heightprop/25.4
+}
 
 # Generate Ridgeline plot ----
 ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tiff")),
        plot = ridgelinetofig,
        device = 'tiff',
        width = 297,
-       height = height,
+       height = heightdens,
        units = 'mm',
        dpi = 300,
        compression = "lzw")
+
+
+# Generate figure for prop-change plot ----
+ggsave(filename = here::here(paste0("Outputs/Figures/Prop_Change_Plot","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tiff")),
+       plot = prochttofig,
+       device = 'tiff',
+       width = 297,
+       height = heightprop,
+       units = 'mm',
+       dpi = 300,
+       compression = "lzw")
+
 
 # Generate report ----
 excl <- roast_result$exclusionMessage
