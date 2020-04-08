@@ -32,8 +32,8 @@ geneIDtype <- "UNIPROT"
 # minSetSize = 5
 # maxSetSize = 80 
 
-minSetSize = 50
-maxSetSize = 600 
+minSetSize = 100
+maxSetSize = 500 
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS (set to 999 for exploration and 9999 for final p-value) ----
 
@@ -343,7 +343,7 @@ ridgelinetofig
 # Change plot height according to the number of terms shown ----
 # For the density plot: 
 
-if (show_n_termsdensdens == 25){
+if (show_n_termsdens == 25){
             heightdens <- 180
             heightdensin <- heightdens/25.4
 } else if (show_n_termsdens <= 15){
