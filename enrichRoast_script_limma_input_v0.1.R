@@ -1,27 +1,6 @@
 ## Stand-alone script for running limma::roast starting from a typical Limma input ----
 ## enrichRoast script. v 0.1 . Miguel Cosenza 24.03.2020 
 
-## PLEASE RUN THE NEXT LINES OF CODE TO CORROBORATE IF YOU HAVE INSTALLED THE REQUIRED PACKAGES ----
-# Note: If some installation is needed, it could take a few minutes to finish.
-
-### Install required packages if necessary
-
-packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2")
-
-biopackgs <- c(orgDB, "limma", "reactome.db", "clusterProfiler",
-               "msigdbr", "KEGGREST", "AnnotationDbi", "GO.db")
-
-if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
-        install.packages(setdiff(packages, rownames(installed.packages())))  
-}
-
-if (length(setdiff(biopackgs, rownames(installed.packages()))) > 0){
-        if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-        
-        BiocManager::install(setdiff(biopackgs, rownames(installed.packages())))
-        
-}
-
 ## PLEASE MODIFY THE INPUT IN THE SCRIPT BY ANSWERING THE QUESIONS
 
 ## PLEASE GIVE A CODE TO IDENTIFY YOUR DATA ----
@@ -50,13 +29,13 @@ geneIDtype <- "UNIPROT"
 # minSetSize = 5
 # maxSetSize = 80 
 
-minSetSize = 15
-maxSetSize = 600
+minSetSize = 50
+maxSetSize = 550
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS (set to 999 for exploration and 9999 for final p-value) ----
 
 pvalueCutoff <- 1
-n_rotations = 999
+n_rotations = 150
 
 ## *-6 EXPERIMENTAL DESIGN ----
 
@@ -129,6 +108,26 @@ category = NULL # Any of the main categories presented here: https://www.gsea-ms
 subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
 specific_category = NULL  # i.e. "NABA"... A string that can be used to subset your categories.
 
+## PLEASE RUN THE NEXT LINES OF CODE TO CORROBORATE IF YOU HAVE INSTALLED THE REQUIRED PACKAGES ----
+# Note: If some installation is needed, it could take a few minutes to finish.
+
+### Install required packages if necessary
+
+packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2")
+
+biopackgs <- c(orgDB, "limma", "reactome.db", "clusterProfiler",
+               "msigdbr", "KEGGREST", "AnnotationDbi", "GO.db")
+
+if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
+        install.packages(setdiff(packages, rownames(installed.packages())))  
+}
+
+if (length(setdiff(biopackgs, rownames(installed.packages()))) > 0){
+        if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+        
+        BiocManager::install(setdiff(biopackgs, rownames(installed.packages())))
+        
+}
 
 # SCRIPT EXECUTION ----
 
@@ -145,7 +144,7 @@ Paired <- FALSE
 ## Load Limma input ####
 
 tabular_data <- read.delim(file = here::here("Data/input_limma.txt"), header = TRUE, stringsAsFactors = FALSE,
-           sep = "\t")
+                                sep = "\t")
 
 ## Run roast function ----
 
