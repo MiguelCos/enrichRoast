@@ -10,10 +10,12 @@
 #'  
 #'### Visualization of results:  
 #' 
-#'##### Showing the top `r show_n_terms` categories by the number of proteins identified within them. 
+#'##### Showing the top `r show_n_termsprop` categories by the number of proteins identified within them. 
 #' 
 #+ fig.width=11.7, fig.height= 7.1, echo = FALSE
-print(prochttofig)
+print(prochttofig)  
+#'
+#'##### Showing the top `r show_n_termsdens` categories by the number of proteins identified within them. 
 #+ fig.width=11.7, fig.height= 7.1, echo = FALSE, message = FALSE
 print(ridgelinetofig)
 #' 

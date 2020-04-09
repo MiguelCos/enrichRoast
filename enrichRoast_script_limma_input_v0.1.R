@@ -8,16 +8,16 @@
 
 ## PLEASE GIVE A CODE TO IDENTIFY YOUR DATA ----
 
-datasetcode <- "Test_run_2"
+datasetcode <- "no-neoadjuvant-treatment"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
-enrichFunc <- "MSIGDB"
+enrichFunc <- "REACTOME"
 
 ## *-2. ORGANISM DATABASE (Please input the name of the Bioconductor org.db you need: i.e. "org.Hs.eg.db" for human) ----
 
-orgDB <- "org.Mm.eg.db"
-species <- "Mus musculus" # this can be any resulting from calling msigdbr::msigdbr_show_species()
+orgDB <- "org.Hs.eg.db"
+species <- "Homo sapiens" # this can be any resulting from calling msigdbr::msigdbr_show_species()
 
 ## *-3. WHAT ID TYPE ARE YOU USING? (i.e. "SYMBOL", "UNIPROT", "ENTREZID") ----
 
@@ -33,21 +33,21 @@ geneIDtype <- "UNIPROT"
 # maxSetSize = 80 
 
 minSetSize = 15
-maxSetSize = 250 
+maxSetSize = 600
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS (set to 999 for exploration and 9999 for final p-value) ----
 
-pvalueCutoff <- 0.05
-n_rotations = 99
+pvalueCutoff <- 1
+n_rotations = 999
 
 ## *-6 EXPERIMENTAL DESIGN ----
 
 ### Define experimental design ####
 
-condition1 <- 6 # number of samples associated to the first condition (treatment, stage, patient, etc...)
-condition2 <- 6 # number of samples associated to the second condition 
+condition1 <- 4 # number of samples associated to the first condition (treatment, stage, patient, etc...)
+condition2 <- 7 # number of samples associated to the second condition 
 
-Conditions <- c("Cntrl", "VpR") # Cntrl corresponds to condition1 and VpR corresponds to condition2
+Conditions <- c("less18", "more24") # condition1, condistion2
 
 ## *-7. VISUALIZATION PARAMTERS: ----
 
@@ -91,7 +91,7 @@ by = NULL # if two terms are equally similar, which condition you want to use to
 
 #### * 8.2.1 DO YOU WANT TO USE A EXCLUSION LIST TO REMOVE NON-INTERSTING TERMS FROM THE FINAL OUTPUT?
 
-exclusionList <- NULL
+exclusionList <- TRUE
 
 ### * 8.3 IF "KEGG" ENRICHMENT WILL BE PERFORMED ----
 
@@ -107,7 +107,7 @@ organism <- NULL
 # subcategory = "CP"
 # specific_category = "NABA"
 
-category = "H" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+category = NULL # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
 subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
 specific_category = NULL  # i.e. "NABA"... A string that can be used to subset your categories.
 
@@ -179,7 +179,8 @@ if (enrichFunc == "GO"){
             source(file = "R/roastMSigDB.R")
             
             roast_result <- roastMSigDB(data = tabular_data,
-                                        geneIDtype = geneIDtype,orgDB = orgDB,
+                                        geneIDtype = geneIDtype,
+                                        orgDB = orgDB,
                                         design = design,
                                         n_rotations = n_rotations,
                                         minSetSize = minSetSize,
