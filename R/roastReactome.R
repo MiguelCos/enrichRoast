@@ -1,4 +1,5 @@
 ### ROAST - Reactome function ----
+
 roastReactome <- function(data, 
                           geneIDtype = "SYMBOL", 
                           orgDB = "org.Hs.eg.db",
@@ -44,7 +45,8 @@ roastReactome <- function(data,
          premat2 <- dplyr::select(premat1,
                                   -all_of(geneIDtype)) %>%  
             dplyr::rename(Name = ENTREZID) %>% 
-            dplyr::filter(is.na(Name) == FALSE) %>% 
+            dplyr::filter(is.na(Name) == FALSE,
+                          !Name %in% .$Name[which(duplicated(.$Name))]) %>% 
             dplyr::distinct() %>% na.omit()
       ))
       
@@ -60,7 +62,7 @@ roastReactome <- function(data,
    } else {
       
       premat2 <- dplyr::filter(data, is.na(ID) == FALSE) %>% 
-         dplyr::distinct() %>% na.omit()
+               dplyr::distinct() %>% na.omit()
       
       genesindata <- premat2$ID
       
@@ -153,7 +155,7 @@ roastReactome <- function(data,
                            dplyr::mutate(PATHNAME = str_remove(PATHNAME, ".*: "))
       
       
-   } else {
+   } else if(exclusionList == FALSE){
    
       reactlistentrez <- as.list(reactomePATHID2EXTID)
       
@@ -172,7 +174,7 @@ roastReactome <- function(data,
       pathterm_n_iddf <- toexclude %>% dplyr::filter(str_detect(PATHNAME, species)) %>% 
                            dplyr::mutate(PATHNAME = str_remove(PATHNAME, ".*: "))
    
-   }
+   } else {stop("Please check your input for 'exclusionList'")}
    
    genesinterm <- qdapTools::list2df(index,
                                      col1 = "index",
@@ -237,11 +239,11 @@ roastReactome <- function(data,
                             design = design)
       ))
    
-   limma_out2 <- eBayes(limma_out)
+   limma_out <- eBayes(limma_out)
    
    suppressWarnings(
       suppressMessages(
-         limma_tab <- topTable(limma_out2, number = dim(matrix1)[1])
+         limma_tab <- topTable(limma_out, number = dim(matrix1)[1], coef = 2)
       ))
    
    # Get log2FC information from Limma and reformat output ----
@@ -250,7 +252,7 @@ roastReactome <- function(data,
    suppressWarnings(
       suppressMessages(
          log2FCs <- dplyr::mutate(limma_tab,
-                                  ENTREZID = ID) %>% 
+                                  ENTREZID = row.names(limma_tab)) %>% 
             dplyr::filter(ENTREZID %in% symb1$ENTREZID) %>% 
             dplyr::select(log2FC = eval(dim(.)[2]-5),ENTREZID) %>% 
             dplyr::left_join(., genesintermread, by = "ENTREZID") %>% ## Look for a way to extract the z-score values as they are used by the ROAST algorithm
@@ -262,7 +264,7 @@ roastReactome <- function(data,
       #suppressWarnings(
          #suppressMessages(
             log2FCs <- dplyr::mutate(limma_tab,
-                                     ENTREZID = ID) %>% 
+                                     ENTREZID = row.names(limma_tab)) %>% 
                dplyr::filter(ENTREZID %in% symb1$ENTREZID) %>% 
                dplyr::select(log2FC = logFC, ENTREZID) %>% 
                dplyr::left_join(., genesintermread, by = "ENTREZID") %>% ## Look for a way to extract the z-score values as they are used by the ROAST algorithm

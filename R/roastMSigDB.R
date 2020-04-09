@@ -43,7 +43,8 @@ roastMSigDB <- function(data,
       premat2 <- dplyr::filter(data, is.na(eval(as.name(geneIDtype))) == FALSE) %>% 
          dplyr::distinct() %>% na.omit() %>% 
          dplyr::rename(ID = SYMBOL) %>% 
-         dplyr::select(ID,2:eval(dim(data)[2]-1), -1)
+         dplyr::select(ID,2:eval(dim(data)[2]-1), -1) %>%
+         dplyr::filter(!ID %in% .$ID[which(duplicated(.$ID))])
       
       genesindata <- premat2$ID
       
@@ -59,7 +60,9 @@ roastMSigDB <- function(data,
          premat2 <- dplyr::filter(data, is.na(eval(as.name(geneIDtype))) == FALSE) %>% 
             dplyr::distinct() %>% na.omit() %>% 
             dplyr::rename(ID = SYMBOL) %>% 
-            dplyr::select(ID,2:eval(dim(data)[2]-1), -1)
+            dplyr::select(ID,2:eval(dim(data)[2]-1), -1) %>%
+            dplyr::filter(!ID %in% .$ID[which(duplicated(.$ID))])
+         
          
          genesindata <- premat2$ID
          
@@ -179,7 +182,7 @@ roastMSigDB <- function(data,
          suppressWarnings(
             suppressMessages(
                log2FCs <- dplyr::mutate(limma_tab,
-                                        ID = ID)  %>% 
+                                        ID = row.names(limma_tab))  %>% 
                   dplyr::filter(ID %in% genesinterm$ID) %>% 
                   dplyr::select(log2FC = logFC, ID) %>% 
                   dplyr::left_join(., genesintermread, by = "ID")  %>%

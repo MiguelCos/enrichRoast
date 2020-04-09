@@ -45,7 +45,8 @@ roastKEGG <- function(data,
          premat2 <- dplyr::select(premat1,
                                   -all_of(geneIDtype)) %>%  
             dplyr::rename(Name = ENTREZID) %>% 
-            dplyr::filter(is.na(Name) == FALSE) %>% 
+            dplyr::filter(is.na(Name) == FALSE,
+                          !Name %in% .$Name[which(duplicated(.$Name))]) %>% 
             dplyr::distinct() %>% na.omit()
          ))
          
@@ -60,7 +61,8 @@ roastKEGG <- function(data,
          
       } else {
          
-         premat2 <- dplyr::filter(data, is.na(ID) == FALSE) %>% 
+         premat2 <- dplyr::filter(data, is.na(ID) == FALSE,
+                                  !Name %in% .$Name[which(duplicated(.$Name))]) %>% 
             dplyr::distinct() %>% na.omit()
          
          genesindata <- premat2$ID
@@ -250,7 +252,7 @@ roastKEGG <- function(data,
       suppressWarnings(
          suppressMessages(
             log2FCs <- dplyr::mutate(limma_tab,
-                                     ENTREZID = ID) %>%  
+                                     ENTREZID = row.names(limma_tab)) %>%  
                dplyr::select(ENTREZID, log2FC = eval(dim(.)[2]-5)) %>% 
                dplyr::left_join(., genesinterm, by = "ENTREZID")  %>%
                dplyr::left_join(., keggidtoterm_df, by = c("KEGGID", "KEGGTERM")) %>%
@@ -263,7 +265,7 @@ roastKEGG <- function(data,
          suppressWarnings(
             suppressMessages(
                log2FCs <- dplyr::mutate(limma_tab,
-                                        ENTREZID = ID) %>%  
+                                        ENTREZID = row.names(limma_tab)) %>%  
                   dplyr::select(ENTREZID, log2FC = logFC) %>% 
                   dplyr::left_join(., genesinterm, by = "ENTREZID")  %>%
                   dplyr::left_join(., keggidtoterm_df, by = c("KEGGID", "KEGGTERM")) %>%
