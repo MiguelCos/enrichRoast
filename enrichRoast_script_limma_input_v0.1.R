@@ -1,8 +1,26 @@
 ## Stand-alone script for running limma::roast starting from a typical Limma input ----
 ## enrichRoast script. v 0.1 . Miguel Cosenza 24.03.2020 
 
-## Stand-alone script for running limma::roast from a Max Quant output ----
-## enrichRoast script. v 0.1 . Miguel Cosenza 24.03.2020 
+## PLEASE RUN THE NEXT LINES OF CODE TO CORROBORATE IF YOU HAVE INSTALLED THE REQUIRED PACKAGES ----
+# Note: If some installation is needed, it could take a few minutes to finish.
+
+### Install required packages if necessary
+
+packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2")
+
+biopackgs <- c(orgDB, "limma", "reactome.db", "clusterProfiler",
+               "msigdbr", "KEGGREST", "AnnotationDbi", "GO.db")
+
+if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
+        install.packages(setdiff(packages, rownames(installed.packages())))  
+}
+
+if (length(setdiff(biopackgs, rownames(installed.packages()))) > 0){
+        if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+        
+        BiocManager::install(setdiff(biopackgs, rownames(installed.packages())))
+        
+}
 
 ## PLEASE MODIFY THE INPUT IN THE SCRIPT BY ANSWERING THE QUESIONS
 
@@ -113,6 +131,11 @@ specific_category = NULL  # i.e. "NABA"... A string that can be used to subset y
 
 
 # SCRIPT EXECUTION ----
+
+# Load packages  ----
+
+library(dplyr)
+library(ggplot2)
 
 ## Define experimental design ####
 

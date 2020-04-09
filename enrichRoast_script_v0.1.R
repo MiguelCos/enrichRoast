@@ -1,6 +1,27 @@
 ## Stand-alone script for running limma::roast from a Max Quant output ----
 ## enrichRoast script. v 0.1 . Miguel Cosenza 24.03.2020 
 
+## PLEASE RUN THE NEXT LINES OF CODE TO CORROBORATE IF YOU HAVE INSTALLED THE REQUIRED PACKAGES ----
+# Note: If some installation is needed, it could take a few minutes to finish.
+
+### Install required packages if necessary
+
+packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2")
+
+biopackgs <- c(orgDB, "limma", "reactome.db", "clusterProfiler",
+               "msigdbr", "KEGGREST", "AnnotationDbi", "GO.db")
+
+if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
+        install.packages(setdiff(packages, rownames(installed.packages())))  
+}
+
+if (length(setdiff(biopackgs, rownames(installed.packages()))) > 0){
+        if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+        
+        BiocManager::install(setdiff(biopackgs, rownames(installed.packages())))
+        
+}
+
 ## PLEASE MODIFY THE INPUT IN THE SCRIPT BY ANSWERING THE QUESIONS
 
 ## PLEASE GIVE A CODE TO IDENTIFY YOUR DATA ----
@@ -114,8 +135,7 @@ specific_category = NULL  # i.e. "NABA"... A string that can be used to subset y
 # Load packages ----
 
 library(dplyr)
-#library(stringr)
-#library(ggplot2)
+library(ggplot2)
 
 # Load MaxQuant data and MSstats input ----
 source(here::here("R/MSstatstoRoast.R"))
