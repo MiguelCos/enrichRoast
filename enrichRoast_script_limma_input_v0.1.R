@@ -33,7 +33,8 @@ minSetSize = 15
 maxSetSize = 1000
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS -----
-# (set n_rotations to 999 for exploration and 9999 for final p-value) ----
+# (set n_rotations to 999 for exploration and 9999 for final p-value) 
+# set cutoff_by = "PValue" if you have heterogeneos data and want to filter by non-adjusted p-values.
 
 pvalueCutoff <- 0.05
 cutoff_by <- "FDR" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
