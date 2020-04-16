@@ -301,7 +301,7 @@ if (enrichFunc == "GO"){
 source("R/propChangePlot.R")
 
 prochangeplot <- propChangePlot(roast_result,
-                                show_n_terms = show_n_terms,
+                                show_n_terms = show_n_termsprop,
                                 colorby = colorbyprop)
 
 # Ridge-line density plots -----
@@ -309,7 +309,7 @@ prochangeplot <- propChangePlot(roast_result,
 source("R/ridgleplotRoast.R")
 
 ridgelineroast <- ridgeplotRoast(roast_result,
-                                 show_n_terms = show_n_terms,
+                                 show_n_terms = show_n_termsdens,
                                  colorby = colorbydens)
 
 
