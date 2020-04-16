@@ -11,6 +11,7 @@ roastMSigDB <- function(data,
                         minSetSize = 1,
                         maxSetSize = 200,
                         pvalueCutoff = 0.05,
+                        cutoff_by = "FDR", # one of "FDR" or "PValue"
                         Paired = FALSE){
       
       ## Load required packages ----  
@@ -133,10 +134,10 @@ roastMSigDB <- function(data,
       ))
       
       roast_out2 <- dplyr::filter(roast_out2,
-                                  FDR <= pvalueCutoff)
+                                  eval(as.name(cutoff_by)) <= pvalueCutoff)
       
       fdrnterm <- dplyr::select(roast_out2,
-                                CategoryTerm, FDR, NGenes)
+                                CategoryTerm, FDR, PValue, NGenes)
       
       
       genesinterm <- dplyr::filter(genesinterm,

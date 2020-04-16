@@ -7,6 +7,7 @@ roastKEGG <- function(data,
                       minSetSize = 1,
                       maxSetSize = 1000,
                       pvalueCutoff = 0.05,
+                      cutoff_by = "FDR", # one of "FDR" or "PValue"
                       exclusionList = TRUE,
                       Paired = FALSE) {
       
@@ -223,10 +224,10 @@ roastKEGG <- function(data,
          ))
       
       roast_out2 <- dplyr::filter(roast_out2,
-                                  FDR <= pvalueCutoff)
+                                  eval(as.name(cutoff_by)) <= pvalueCutoff)
       
       fdrnterm <- dplyr::select(roast_out2,
-                                CategoryTerm, FDR, NGenes)
+                                CategoryTerm, FDR, PValue, NGenes)
       
       genesinterm <- dplyr::filter(genesinterm,
                                        KEGGID %in% roast_out2$CategoryID)

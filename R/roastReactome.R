@@ -8,6 +8,7 @@ roastReactome <- function(data,
                           minSetSize = 1,
                           maxSetSize = 1506,
                           pvalueCutoff = 0.05,
+                          cutoff_by = "FDR", # one of "FDR" or "PValue"
                           exclusionList = TRUE,
                           species = "Homo sapiens",
                           Paired = FALSE){
@@ -226,7 +227,7 @@ roastReactome <- function(data,
    nterms <- dim(roast_out2)[1]
    
    fdrnterm <- dplyr::select(roast_out2,
-                             CategoryTerm, FDR, NGenes)
+                             CategoryTerm, FDR, PValue, NGenes)
    
    genesintermread <- dplyr::filter(genesintermread,
                                     PATHID %in% roast_out2$CategoryID)
