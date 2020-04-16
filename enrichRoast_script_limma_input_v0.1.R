@@ -5,7 +5,7 @@
 
 ## PLEASE GIVE A CODE TO IDENTIFY YOUR DATA ----
 
-datasetcode <- "Your_data_set_code_here"
+datasetcode <- "Data_set_code"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
@@ -32,11 +32,12 @@ geneIDtype <- "UNIPROT"
 minSetSize = 15
 maxSetSize = 1000
 
-## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS (set to 999 for exploration and 9999 for final p-value) ----
+## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS -----
+# (set n_rotations to 999 for exploration and 9999 for final p-value) ----
 
-pvalueCutoff <- 0.25
-cutoff_by <- "PValue" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
-n_rotations = 999
+pvalueCutoff <- 0.05
+cutoff_by <- "FDR" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
+n_rotations = 9999 # 
 
 ## *-6 EXPERIMENTAL DESIGN ----
 
@@ -55,9 +56,9 @@ Conditions <- c("Control", "VpR") # condition1, condistion2
 show_n_termsprop <- 30 # how many enriched terms do you want to plot?
 
 #### * 7.1.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
-
+# Recomended: "FDR"
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
-colorbyprop <- "PValue" 
+colorbyprop <- "FDR" 
 
 ### * 7.2. RIDGELINE DENSITY PLOTS ---
 
@@ -65,9 +66,9 @@ colorbyprop <- "PValue"
 show_n_termsdens <- 30 # how many enriched terms do you want to plot?
 
 #### * 7.2.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
-
+# Recomended: "FDR"
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
-colorbydens <- "PValue" 
+colorbydens <- "FDR" 
 
 ## *-8. OPTIONAL PARAMETERS: FILL THESE UP DEPENDING ON WHAT YOU CHOOSE IN SECTION *-1. ----
 
@@ -77,13 +78,13 @@ colorbydens <- "PValue"
 
 #### * 8.1.1. WHICH GO ONTOLOGY YOU DO WANT TO EXPLORE? (one of: "MF", "CC" or "BP") ----
 
-ontology = "CC"
+ontology = "MF"
 
 #### * 8.1.2. DO YOU WANT TO REMOVE REDUNDANT GO TERMS?
 
 simplify <- TRUE
 cutoff <- 0.7 # how similar should be two GO terms to be considered redundant? (0.7 is recommended)
-by = "PValue" # if two terms are equally similar, which condition you want to use to select between them ("FDR" or "PValue")
+by = "FDR" # if two terms are equally similar, which condition you want to use to select between them ("FDR" or "PValue")
 
 ### * 8.2. IF "REACTOME" OR "KEGG" ENRICHMENT WILL BE PERFORMED ---- 
 
@@ -258,77 +259,77 @@ if (dir.exists(here::here("Outputs")) == FALSE){
 if (enrichFunc == "GO"){
             
             write.table(x = roast_result$roastOutput,
-                        file = here::here(paste0("Outputs/Tabular_data/Roast_Output","_",enrichFunc,"_",ontology,"min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/Roast_Output","_",enrichFunc,"_",ontology,"min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
             write.table(x = roast_result$GenesPerTerm,
-                        file = here::here(paste0("Outputs/Tabular_data/GenesPerEnrichTerm","_",enrichFunc,"_",ontology,"min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/GenesPerEnrichTerm","_",enrichFunc,"_",ontology,"min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
             write.table(x = roast_result$log2FCs,
-                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_",ontology,"min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_",ontology,"min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
 } else if (enrichFunc == "REACTOME"){
             write.table(x = roast_result$roastOutput,
-                        file = here::here(paste0("Outputs/Tabular_data/Roast_Output","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/Roast_Output","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
             write.table(x = roast_result$GenesPerTerm,
-                        file = here::here(paste0("Outputs/Tabular_data/GenesPerEnrichTerm","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/GenesPerEnrichTerm","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
             write.table(x = roast_result$log2FCs,
-                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
             write.table(x = roast_result$ExclusionList,
-                        file = here::here(paste0("Outputs/Tabular_data/Blacklist_of_terms","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/Blacklist_of_terms","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
 } else if (enrichFunc == "KEGG"){
             
             write.table(x = roast_result$roastOutput,
-                        file = here::here(paste0("Outputs/Tabular_data/Roast_Output","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/Roast_Output","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
             write.table(x = roast_result$GenesPerTerm,
-                        file = here::here(paste0("Outputs/Tabular_data/GenesPerEnrichTerm","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/GenesPerEnrichTerm","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
             write.table(x = roast_result$log2FCs,
-                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
             write.table(x = roast_result$exclusionList,
-                        file = here::here(paste0("Outputs/Tabular_data/Blacklist_of_terms","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/Blacklist_of_terms","_",enrichFunc,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
 } else if (enrichFunc == "MSIGDB"){
             
             write.table(x = roast_result$roastOutput,
-                        file = here::here(paste0("Outputs/Tabular_data/Roast_Output","_",enrichFunc,"_",category,"_",subcategory,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/Roast_Output","_",enrichFunc,"_",category,"_",subcategory,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
             write.table(x = roast_result$GenesPerTerm,
-                        file = here::here(paste0("Outputs/Tabular_data/GenesPerEnrichTerm","_",enrichFunc,"_",category,"_",subcategory,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/GenesPerEnrichTerm","_",enrichFunc,"_",category,"_",subcategory,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
             write.table(x = roast_result$log2FCs,
-                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_",category,"_",subcategory,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tsv")),
+                        file = here::here(paste0("Outputs/Tabular_data/CombinendRoastNLimma_wFCs","_",enrichFunc,"_",category,"_",subcategory,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tsv")),
                         sep = "\t",
                         row.names = FALSE)
             
@@ -426,7 +427,7 @@ if (show_n_termsprop == 25){
 }
 
 # Generate Ridgeline plot ----
-ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tiff")),
+ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
        plot = ridgelinetofig,
        device = 'tiff',
        width = 297,
@@ -437,7 +438,7 @@ ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot","_",enrichF
 
 
 # Generate figure for prop-change plot ----
-ggsave(filename = here::here(paste0("Outputs/Figures/Prop_Change_Plot","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".tiff")),
+ggsave(filename = here::here(paste0("Outputs/Figures/Prop_Change_Plot","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
        plot = prochttofig,
        device = 'tiff',
        width = 297,
@@ -452,6 +453,6 @@ excl <- roast_result$exclusionMessage
 
 rmarkdown::render(input = here::here("R/renderReport.R"),
                   output_file = here::here(paste0("Outputs/Analysis_report","_",enrichFunc,ontology,category,subcategory,specific_category,
-                                                  "_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,".html")))
+                                                  "_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".html")))
 
 
