@@ -16,8 +16,8 @@ ridgeplotRoast <- function(roastOutput,
       tofil <- roastOutput$roastOutput
       toridge <- roastOutput$log2FCs
       
-      catid2PValue <- dplyr::select(tofil,
-                                    CategoryID, PValue)
+      #catid2PValue <- dplyr::select(tofil,
+      #                              CategoryID, PValue)
       
       toproplot <- dplyr::select(tofil,
                                  NGenes, PropDown, PropUp, Direction, CategoryTerm,
@@ -32,8 +32,8 @@ ridgeplotRoast <- function(roastOutput,
          dplyr::group_by(CategoryTerm, NGenes) 
       
       datatab <- dplyr::filter(toridge,
-                               CategoryTerm %in% unique(toproplot$CategoryTerm)) %>% 
-         dplyr::left_join(.,catid2PValue, by = "CategoryID") #%>%
+                               CategoryTerm %in% unique(toproplot$CategoryTerm)) #%>% 
+         #dplyr::left_join(.,catid2PValue, by = "CategoryID") #%>%
       
       summtab <-  dplyr::group_by(datatab, CategoryTerm) %>%
          dplyr::summarise(meadianlo2FC = median(log2FC))
