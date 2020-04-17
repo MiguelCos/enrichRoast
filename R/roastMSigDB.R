@@ -7,7 +7,6 @@ roastMSigDB <- function(data,
                         subcategory = NULL,
                         specific_category = NULL,
                         design,
-                        n_rotations = 999,
                         minSetSize = 1,
                         maxSetSize = 200,
                         pvalueCutoff = 0.05,
@@ -119,8 +118,17 @@ roastMSigDB <- function(data,
       roast_out <- mroast(y = matrix1,
                          contrast= ncol(design),
                          design = design, 
-                         nrot = n_rotations, 
-                         index = index)
+                         nrot = 10, 
+                         index = index) %>%
+         dplyr::select(-PValue, -FDR, -PValue.Mixed, -FDR.Mixed)
+      
+      fry_out <- fry(y = matrix1,
+                     contrast= ncol(design),
+                     design = design, 
+                     index = index) %>% 
+         dplyr::mutate(CategoryID = row.names(.)) %>%
+         dplyr::select(CategoryID, PValue, FDR, PValue.Mixed, FDR.Mixed, -NGenes)     
+      
       
       # Process ROAST output ----
       suppressWarnings(suppressMessages(
@@ -129,7 +137,8 @@ roastMSigDB <- function(data,
                                      gs_id = row.names(roast_out)) %>% 
             dplyr::left_join(.,pathterm_n_iddf,
                              by = "gs_id") %>% 
-            dplyr::rename(CategoryID = gs_id, CategoryTerm = gs_name)
+            dplyr::rename(CategoryID = gs_id, CategoryTerm = gs_name)%>%
+            dplyr::left_join(.,fry_out, by = "CategoryID")
          
       ))
       

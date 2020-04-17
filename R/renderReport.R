@@ -10,14 +10,28 @@
 #'  
 #'### Visualization of results:  
 #' 
-#'##### Showing the top `r show_n_termsprop` categories by the number of proteins identified within them. 
+#'#### Differential proportion plots  
+#'  
+#'##### Showing the top `r show_n_termsprop` categories with the higher number of proteins identified within them. 
 #' 
 #+ fig.width=11.7, fig.height= 7.1, echo = FALSE
-print(prochttofig)  
+print(prochttofigngenes)  
 #'
-#'##### Showing the top `r show_n_termsdens` categories by the number of proteins identified within them. 
+#'##### Showing the top `r show_n_termsprop` categories with the higher value of |ProportionUp - ProportionDown|. 
+#' 
+#+ fig.width=11.7, fig.height= 7.1, echo = FALSE
+print(prochangeplotdiff)  
+#'
+#'#### Ridgeline log2(FC) density plots
+#'
+#'##### Showing the top `r show_n_termsdens` categories with the higher number of proteins identified within them. 
 #+ fig.width=11.7, fig.height= 7.1, echo = FALSE, message = FALSE
-print(ridgelinetofig)
+print(ridgelinetofigngenes)
+#' 
+#'##### Showing the top `r show_n_termsdens` categories with the higher value of |ProportionUp - ProportionDown|.
+#' 
+#+ fig.width=11.7, fig.height= 7.1, echo = FALSE, message = FALSE
+print(ridgelinetofigdiff)
 #' 
 #'### Organism database used: **`r orgDB`**
 #'### User parameters: 
@@ -26,7 +40,7 @@ print(ridgelinetofig)
 #' * minSetSize = `r minSetSize`
 #' * maxSetSize = `r maxSetSize`
 #' * P-value cut-off = `r pvalueCutoff`
-#' * Number of rotations = `r n_rotations`
+#' * Cut-off by = `r cutoff_by` 
 #' 
 #'### Experimental design: 
 #' 

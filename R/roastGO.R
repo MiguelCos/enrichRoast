@@ -17,7 +17,6 @@ roastGO <- function(data,
                     ontology = "MF",
                     orgDB = "org.Hs.eg.db", 
                     design,
-                    n_rotations = 9999,
                     minSetSize = 1,
                     maxSetSize = 1506,
                     pvalueCutoff = 0.05,
@@ -25,9 +24,9 @@ roastGO <- function(data,
                     Paired = FALSE){
       
       ## Load required packages ----
-      require(orgDB, character.only = TRUE) || stop(paste("package", organism, "is required", sep = " "))
-      require(limma) || stop("Package limma is required")
-      require(GO.db) || stop("Package reactome.db is required")
+      require(orgDB, character.only = TRUE) #|| stop(paste("package", organism, "is required", sep = " "))
+      require(limma) #|| stop("Package limma is required")
+      require(GO.db) #|| stop("Package reactome.db is required")
       require(AnnotationDbi)
       require(dplyr)
       
@@ -115,9 +114,18 @@ roastGO <- function(data,
    roast_out <- mroast(y = matrix1,
                     contrast= ncol(design),
                     design = design, 
-                    nrot = n_rotations, 
-                    index = index)
+                    nrot = 10, 
+                    index = index) %>%
+       dplyr::select(-PValue, -FDR, -PValue.Mixed, -FDR.Mixed)
    
+   fry_out <- fry(y = matrix1,
+                  contrast= ncol(design),
+                  design = design, 
+                  index = index) %>% 
+      dplyr::mutate(CategoryID = row.names(.)) %>%
+      dplyr::select(CategoryID, PValue, FDR, PValue.Mixed, FDR.Mixed, -NGenes)     
+   
+
    # Process ROAST output ----
    suppressWarnings(
       suppressMessages(
@@ -125,7 +133,8 @@ roastGO <- function(data,
                                GOID = row.names(roast_out)) %>% 
       dplyr::left_join(.,goterm_n_iddf,
                        by = "GOID") %>% 
-      dplyr::rename(CategoryID = GOID, CategoryTerm = GOTERM)
+      dplyr::rename(CategoryID = GOID, CategoryTerm = GOTERM) %>%
+      dplyr::left_join(.,fry_out, by = "CategoryID")
    
       ))
    

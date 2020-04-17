@@ -1,10 +1,23 @@
 ### ROAST - Reactome function ----
 
+
+#data = tabular_data
+#geneIDtype = "UNIPROT"
+#orgDB = "org.Mm.eg.db"
+#design = design
+#n_rotations = 99
+#minSetSize = 30
+#maxSetSize = 300
+#pvalueCutoff = 0.9
+#cutoff_by = "FDR" # one of "FDR" or "PValue"
+#exclusionList = TRUE
+#species = "Mus musculus"
+#Paired = FALSE
+
 roastReactome <- function(data, 
                           geneIDtype = "SYMBOL", 
                           orgDB = "org.Hs.eg.db",
                           design,
-                          n_rotations = 9999,
                           minSetSize = 1,
                           maxSetSize = 1506,
                           pvalueCutoff = 0.05,
@@ -207,8 +220,17 @@ roastReactome <- function(data,
    roast_out <- mroast(y = matrix1,
                       contrast= ncol(design),
                       design = design, 
-                      nrot = n_rotations, 
-                      index = index)
+                      nrot = 10, 
+                      index = index) %>%
+               dplyr::select(-PValue, -FDR, -PValue.Mixed, -FDR.Mixed)
+   
+   fry_out <- fry(y = matrix1,
+                       contrast= ncol(design),
+                       design = design, 
+                       index = index) %>% 
+               dplyr::mutate(CategoryID = row.names(.)) %>%
+               dplyr::select(CategoryID, PValue, FDR, PValue.Mixed, FDR.Mixed, -NGenes)
+   
    
    # Process ROAST output ----
    suppressWarnings(suppressMessages(
@@ -217,12 +239,13 @@ roastReactome <- function(data,
                                      PATHID = row.names(roast_out)) %>% 
             dplyr::left_join(.,pathterm_n_iddf,
                              by = "PATHID") %>% 
-            dplyr::rename(CategoryID = PATHID, CategoryTerm = PATHNAME)
+            dplyr::rename(CategoryID = PATHID, CategoryTerm = PATHNAME) %>%
+            dplyr::left_join(.,fry_out, by = "CategoryID")
          
       ))
    
    roast_out2 <- dplyr::filter(roast_out2,
-                               FDR <= pvalueCutoff)
+                               eval(as.name(cutoff_by)) <= pvalueCutoff)
    
    nterms <- dim(roast_out2)[1]
    
@@ -311,6 +334,6 @@ roastReactome <- function(data,
    }
    
    
-   if (dim(roast_out2)[1] == 0){warning("No terms were enriched under your p.adjusted-value threshold")}
+   if (dim(roast_out2)[1] == 0){warning("No terms were enriched under your p-value threshold")}
    return(roastResult)
 }

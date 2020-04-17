@@ -1,7 +1,13 @@
 ## propChangePlot function ----
+#show_n_terms <- 30
+#roastresult <- roast_result
+#colorby <- cutoff_by
+#top_n_by <- "NGenes" # "NGenes"
+
 propChangePlot <- function(roastresult,
                            show_n_terms = 25,
-                           colorby = "FDR"){
+                           colorby = "FDR",
+                           top_n_by = "NGenes"){ # one of "Difference" or "NGenes"
    
    # Load required packages ----
    
@@ -18,14 +24,43 @@ propChangePlot <- function(roastresult,
    toproplot <- dplyr::select(roastOutput,
                               NGenes, Direction, PropUp, PropDown, CategoryTerm,
                               FDR, PValue) %>%
-      dplyr::top_n(n = show_n_terms,
-                   wt = NGenes) %>%
+      #dplyr::top_n(n = show_n_terms,
+       #            wt = NGenes) %>%
       dplyr::mutate(DiffProp = abs(PropUp - PropDown),
-                    PropDown = -PropDown) %>%
+                    PropDown = -PropDown,#)%>%#,
+                    FDR = round(FDR, 2),
+                    PValue = round(PValue, 2)) %>%
+      dplyr::top_n(n = show_n_terms,
+                   wt = if(top_n_by == "Difference"){DiffProp}
+                           else if(top_n_by == "NGenes"){NGenes}
+                   ) %>%
       tidyr::pivot_longer(cols = c(PropDown, PropUp),
                           names_to = "PropDirection",
                           values_to = "Proportion") %>%
+      #dplyr::top_n(n = show_n_terms,
+      #             wt = NGenes)
       dplyr::group_by(CategoryTerm, NGenes) 
+   
+   zero_range <- function(x) {
+      if (length(x) == 1) return(TRUE)
+      x <- range(x) / mean(x)
+      isTRUE(all.equal(x[1], x[2], tolerance = .Machine$double.eps ^ 0.5))
+   }
+   
+   pvals <- dplyr::pull(toproplot, eval(as.name(colorby)))
+   
+   if(isEmpty(pvals)){stop("Error: no terms to plot")}
+   
+   if (zero_range(pvals) == TRUE){
+      maxpval <- max(pvals)
+      limits <- c(0,maxpval)
+      breaks <- round(seq(0, maxpval, length = 7), 2)
+   } else if(zero_range(pvals) == FALSE){
+      maxpval <- max(pvals)
+      minpval <- min(pvals)
+      limits <- c(minpval,maxpval)
+      breaks <- round(seq(minpval, maxpval, length = 7), 2)
+   }
    
    # Plot ----
    
@@ -37,7 +72,10 @@ propChangePlot <- function(roastresult,
       geom_point(aes(color=eval(as.name(colorby)), size = NGenes))+
       scale_color_gradient(high = "#0fabbc",
                            low = '#fa163f',
-                           guide = guide_colourbar(reverse = TRUE))+
+                           guide = guide_colourbar(reverse = TRUE),
+                           limits = limits,
+                           breaks = breaks,
+                           name = colorby)+
       geom_text(data = dplyr::filter(toproplot, PropDirection == "PropUp"), 
                 aes(label=round(Proportion,2)),
                 hjust = -0.85)+
@@ -46,10 +84,12 @@ propChangePlot <- function(roastresult,
                 hjust = +1.85)+
       scale_y_continuous(expand=c(0.2,0), limits=c(-1, 1))+
       labs(title = "Proportion of Up- or Down-regulated Proteins by Category", 
-           subtitle= "Positive values = Proportion of up-regulated proteins in category",
+          subtitle= "Positive values = Proportion of up-regulated proteins in category",
            x="Biological category", y = "Proportion of Proteins",
            color = colorby,
-           size = "N Genes per set")+
+           size = "N Genes per set",
+           caption = if(top_n_by == "Difference"){paste0("Showing top ",show_n_terms," terms by |ProportionUp - ProportionDown|")}
+           else if(top_n_by == "NGenes"){paste0("Showing top ",show_n_terms," terms by N Genes per set")})+
       theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5, size = 10),
             panel.background = element_blank(),
             panel.grid.major = element_blank(),

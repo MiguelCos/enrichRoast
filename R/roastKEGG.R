@@ -3,7 +3,6 @@ roastKEGG <- function(data,
                       orgDB = "org.Hs.eg.db",
                       organism = "mmu", # here the sintax should correspond with the  sintax
                       design,
-                      n_rotations = 999,
                       minSetSize = 1,
                       maxSetSize = 1000,
                       pvalueCutoff = 0.05,
@@ -13,12 +12,12 @@ roastKEGG <- function(data,
       
    ## Load required packages ----
       
-      require(KEGGREST) || stop("Package REST is required")
-      require(orgDB, character.only = TRUE) || stop(paste("package", orgDb, "is required", sep=" "))
-      require(limma) || stop("Package limma is required")
-      suppressMessages(require(clusterProfiler)) || stop("Package clusterProfiler is required")
-      require(dplyr) || stop("Package dplyr is required")
-      require(stringr) || stop("Package stringr is required")
+      require(KEGGREST) #|| stop("Package KEGGREST is required")
+      require(orgDB, character.only = TRUE) #|| stop(paste("package", orgDb, "is required", sep=" "))
+      require(limma) #|| stop("Package limma is required")
+      suppressMessages(require(clusterProfiler)) #|| stop("Package clusterProfiler is required")
+      require(dplyr) #|| stop("Package dplyr is required")
+      require(stringr) #|| stop("Package stringr is required")
       
       ## Generate matrix to roast ----
       
@@ -206,12 +205,20 @@ roastKEGG <- function(data,
        
       
       ## Run roast ----
-      
+
       roast_out <- mroast(y = matrix1,
-                         contrast= ncol(design),
-                         design = design, 
-                         nrot = n_rotations, 
-                         index = index)
+                          contrast= ncol(design),
+                          design = design, 
+                          nrot = 10, 
+                          index = index) %>%
+                   dplyr::select(-PValue, -FDR, -PValue.Mixed, -FDR.Mixed)
+            
+      fry_out <- fry(y = matrix1,
+                     contrast= ncol(design),
+                     design = design, 
+                     index = index) %>% 
+               dplyr::mutate(CategoryID = row.names(.)) %>%
+               dplyr::select(CategoryID, PValue, FDR, PValue.Mixed, FDR.Mixed, -NGenes)      
       
       
       ## Process output ----
@@ -220,7 +227,9 @@ roastKEGG <- function(data,
                                   KEGGID = row.names(roast_out)) %>% 
          dplyr::left_join(.,keggidtoterm_df,
                           by = "KEGGID") %>% 
-         dplyr::rename(CategoryID = KEGGID, CategoryTerm = KEGGTERM)
+         dplyr::rename(CategoryID = KEGGID, CategoryTerm = KEGGTERM) %>%
+         dplyr::left_join(.,fry_out, by = "CategoryID")
+      
          ))
       
       roast_out2 <- dplyr::filter(roast_out2,
@@ -260,7 +269,7 @@ roastKEGG <- function(data,
                dplyr::rename(CategoryID = KEGGID, CategoryTerm = KEGGTERM) %>%
                dplyr::left_join(.,fdrnterm, by = "CategoryTerm") %>%
                dplyr::filter(is.na(FDR) == FALSE) %>% 
-               dplyr::select(ENTREZID, SYMBOL, log2FC, CategoryID, CategoryTerm, FDR, NGenes)
+               dplyr::select(ENTREZID, SYMBOL, log2FC, CategoryID, CategoryTerm, FDR, PValue, NGenes)
          ))
       } else if(Paired == FALSE){
          suppressWarnings(
@@ -273,7 +282,7 @@ roastKEGG <- function(data,
                   dplyr::rename(CategoryID = KEGGID, CategoryTerm = KEGGTERM) %>%
                   dplyr::left_join(.,fdrnterm, by = "CategoryTerm") %>%
                   dplyr::filter(is.na(FDR) == FALSE) %>% 
-                  dplyr::select(ENTREZID, SYMBOL, log2FC, CategoryID, CategoryTerm, FDR, NGenes)
+                  dplyr::select(ENTREZID, SYMBOL, log2FC, CategoryID, CategoryTerm, FDR, PValue, NGenes)
             ))
       }
          

@@ -33,12 +33,10 @@ minSetSize = 100
 maxSetSize = 500
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS (set to 999 for exploration and 9999 for final p-value) ----
-# (set n_rotations to 999 for exploration and 9999 for final p-value) 
 # set cutoff_by = "PValue" if you have heterogeneos data and want to filter by non-adjusted p-values.
 
 pvalueCutoff <- 0.05
 cutoff_by <- "FDR" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
-n_rotations = 9999 # 
 
 ## *-6 EXPERIMENTAL DESIGN ----
 
@@ -59,7 +57,7 @@ show_n_termsprop <- 30 # how many enriched terms do you want to plot?
 #### * 7.1.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 # Recomended: "FDR"
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
-colorbyprop <- "FDR" 
+colorbyprop <- cutoff_by 
 
 ### * 7.2. RIDGELINE DENSITY PLOTS ---
 
@@ -69,7 +67,7 @@ show_n_termsdens <- 30 # how many enriched terms do you want to plot?
 #### * 7.2.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 # Recomended: "FDR"
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
-colorbydens <- "FDR" 
+colorbydens <- cutoff_by 
 
 ## *-8. OPTIONAL PARAMETERS: FILL THESE UP DEPENDING ON WHAT YOU CHOOSE IN SECTION *-1. ----
 
@@ -239,7 +237,6 @@ if (enrichFunc == "GO"){
                                     ontology = ontology,
                                     orgDB = orgDB, 
                                     design = roast_input$design,
-                                    n_rotations = n_rotations,
                                     minSetSize = minSetSize,
                                     maxSetSize = maxSetSize,
                                     pvalueCutoff = pvalueCutoff,
@@ -258,7 +255,6 @@ if (enrichFunc == "GO"){
                                           geneIDtype = geneIDtype,
                                           orgDB = orgDB, 
                                           design = roast_input$design,
-                                          n_rotations = n_rotations,
                                           minSetSize = minSetSize,
                                           maxSetSize = maxSetSize,
                                           pvalueCutoff = pvalueCutoff,
@@ -271,7 +267,6 @@ if (enrichFunc == "GO"){
             roast_result <- roastKEGG(data = roast_input$tabular_data,
                                       geneIDtype = geneIDtype,orgDB = orgDB,
                                       design = roast_input$design,
-                                      n_rotations = n_rotations,
                                       minSetSize = minSetSize,
                                       maxSetSize = maxSetSize,
                                       pvalueCutoff = pvalueCutoff,
@@ -284,7 +279,6 @@ if (enrichFunc == "GO"){
             roast_result <- roastMSigDB(data = roast_input$tabular_data,
                                         geneIDtype = geneIDtype,orgDB = orgDB,
                                         design = roast_input$design,
-                                        n_rotations = n_rotations,
                                         minSetSize = minSetSize,
                                         maxSetSize = maxSetSize,
                                         pvalueCutoff = pvalueCutoff,

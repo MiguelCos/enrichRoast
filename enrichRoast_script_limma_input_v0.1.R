@@ -5,11 +5,11 @@
 
 ## PLEASE GIVE A CODE TO IDENTIFY YOUR DATA ----
 
-datasetcode <- "Data_set_code"
+datasetcode <- "VpRH2_vs_VpR"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
-enrichFunc <- "GO"
+enrichFunc <- "MSIGDB"
 
 ## *-2. ORGANISM DATABASE (Please input the name of the Bioconductor org.db you need: i.e. "org.Hs.eg.db" for human) ----
 
@@ -29,16 +29,14 @@ geneIDtype <- "UNIPROT"
 # minSetSize = 5
 # maxSetSize = 80 
 
-minSetSize = 15
-maxSetSize = 1000
+minSetSize = 10 
+maxSetSize = 300
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS -----
-# (set n_rotations to 999 for exploration and 9999 for final p-value) 
 # set cutoff_by = "PValue" if you have heterogeneos data and want to filter by non-adjusted p-values.
 
 pvalueCutoff <- 0.05
-cutoff_by <- "FDR" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
-n_rotations = 9999 # 
+cutoff_by <- "PValue" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
 
 ## *-6 EXPERIMENTAL DESIGN ----
 
@@ -47,7 +45,7 @@ n_rotations = 9999 #
 condition1 <- 6 # number of samples associated to the first condition (treatment, stage, patient, etc...)
 condition2 <- 6 # number of samples associated to the second condition 
 
-Conditions <- c("Control", "VpR") # condition1, condistion2
+Conditions <- c("VpR", "VpRH2") # condition1, condistion2
 
 ## *-7. VISUALIZATION PARAMTERS: ----
 
@@ -57,9 +55,9 @@ Conditions <- c("Control", "VpR") # condition1, condistion2
 show_n_termsprop <- 30 # how many enriched terms do you want to plot?
 
 #### * 7.1.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
-# Recomended: "FDR"
+# Recomended: NOT MODIFY: this way the Color-coding for the plots will be the same as cutoff_by
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
-colorbyprop <- "FDR" 
+colorbyprop <- cutoff_by 
 
 ### * 7.2. RIDGELINE DENSITY PLOTS ---
 
@@ -67,9 +65,9 @@ colorbyprop <- "FDR"
 show_n_termsdens <- 30 # how many enriched terms do you want to plot?
 
 #### * 7.2.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
-# Recomended: "FDR"
+# Recomended: NOT MODIFY: this way the Color-coding for the plots will be the same as cutoff_by
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
-colorbydens <- "FDR" 
+colorbydens <- cutoff_by
 
 ## *-8. OPTIONAL PARAMETERS: FILL THESE UP DEPENDING ON WHAT YOU CHOOSE IN SECTION *-1. ----
 
@@ -79,13 +77,14 @@ colorbydens <- "FDR"
 
 #### * 8.1.1. WHICH GO ONTOLOGY YOU DO WANT TO EXPLORE? (one of: "MF", "CC" or "BP") ----
 
-ontology = "MF"
+ontology = NULL
 
 #### * 8.1.2. DO YOU WANT TO REMOVE REDUNDANT GO TERMS?
 
-simplify <- TRUE
-cutoff <- 0.7 # how similar should be two GO terms to be considered redundant? (0.7 is recommended)
-by = "FDR" # if two terms are equally similar, which condition you want to use to select between them ("FDR" or "PValue")
+simplify <- FALSE
+cutoff <- NULL # how similar should be two GO terms to be considered redundant? (0.7 is recommended)
+# by = recommended: NOT MODIFY set equal to cutoff_by
+by = cutoff_by # if two terms are equally similar, which condition you want to use to select between them ("FDR" or "PValue")
 
 ### * 8.2. IF "REACTOME" OR "KEGG" ENRICHMENT WILL BE PERFORMED ---- 
 
@@ -107,7 +106,7 @@ organism <- NULL
 # subcategory = "CP"
 # specific_category = "NABA"
 
-category = NULL # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+category = "H" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
 subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
 specific_category = NULL  # i.e. "NABA"... A string that can be used to subset your categories.
 
@@ -160,7 +159,6 @@ if (enrichFunc == "GO"){
                                     ontology = ontology,
                                     orgDB = orgDB, 
                                     design = design,
-                                    n_rotations = n_rotations,
                                     minSetSize = minSetSize,
                                     maxSetSize = maxSetSize,
                                     pvalueCutoff = pvalueCutoff,
@@ -180,7 +178,6 @@ if (enrichFunc == "GO"){
                                           geneIDtype = geneIDtype,
                                           orgDB = orgDB, 
                                           design = design,
-                                          n_rotations = n_rotations,
                                           minSetSize = minSetSize,
                                           maxSetSize = maxSetSize,
                                           pvalueCutoff = pvalueCutoff,
@@ -194,14 +191,12 @@ if (enrichFunc == "GO"){
             roast_result <- roastKEGG(data = tabular_data,
                                       geneIDtype = geneIDtype,orgDB = orgDB,
                                       design = design,
-                                      n_rotations = n_rotations,
                                       minSetSize = minSetSize,
                                       maxSetSize = maxSetSize,
                                       pvalueCutoff = pvalueCutoff,
                                       cutoff_by = cutoff_by,
                                       exclusionList = exclusionList,
                                       organism = organism,
-                                      
                                       Paired = Paired)
 } else if (enrichFunc == "MSIGDB"){
             source(file = "R/roastMSigDB.R")
@@ -210,7 +205,6 @@ if (enrichFunc == "GO"){
                                         geneIDtype = geneIDtype,
                                         orgDB = orgDB,
                                         design = design,
-                                        n_rotations = n_rotations,
                                         minSetSize = minSetSize,
                                         maxSetSize = maxSetSize,
                                         pvalueCutoff = pvalueCutoff,
@@ -223,20 +217,32 @@ if (enrichFunc == "GO"){
 
 ## Visualization ----
 
-# Proportions-change plot ----
+# Proportions-change plots ----
 source("R/propChangePlot.R")
 
-prochangeplot <- propChangePlot(roast_result,
+prochangeplotdiff <- propChangePlot(roast_result,
                                 show_n_terms = show_n_termsprop,
-                                colorby = colorbyprop)
+                                colorby = colorbyprop,
+                                top_n_by = "Difference")
+
+prochangeplotngenes <- propChangePlot(roast_result,
+                                    show_n_terms = show_n_termsprop,
+                                    colorby = colorbyprop,
+                                    top_n_by = "NGenes")
 
 # Ridge-line density plots -----
 
 source("R/ridgleplotRoast.R")
 
-ridgelineroast <- ridgeplotRoast(roast_result,
+ridgelineroastdiff <- ridgeplotRoast(roast_result,
+                                       show_n_terms = show_n_termsdens,
+                                       colorby = colorbydens,
+                                       top_n_by = "Difference")
+
+ridgelineroastngenes <- ridgeplotRoast(roast_result,
                                  show_n_terms = show_n_termsdens,
-                                 colorby = colorbydens)
+                                 colorby = colorbydens,
+                                 top_n_by = "NGenes")
 
 
 ## Generate outputs ----
@@ -339,8 +345,8 @@ if (enrichFunc == "GO"){
 ### outputs for figures ----
 
 
-prochttofig  <- prochangeplot + 
-            labs(caption = datasetcode,
+prochttofigdiff  <- prochangeplotdiff + 
+            labs(caption = paste0(datasetcode," // ","Showing top ",show_n_terms," terms by |ProportionUp - ProportionDown|"),
                  subtitle = paste("Positive values = Proportion of up-regulated proteins in",
                                   Conditions[2]))+
             theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5, size = 11),
@@ -353,9 +359,27 @@ prochttofig  <- prochangeplot +
                   plot.title = element_text(size = 15, face = "bold"),
                   plot.subtitle = element_text(size = 12, face = "plain"))
 
-prochttofig
+prochttofigdiff
 
-ridgelinetofig <- ridgelineroast +
+
+prochttofigngenes  <- prochangeplotngenes + 
+        labs(caption = paste0(datasetcode," // ","Showing top ",show_n_terms," terms by N Genes per set"),
+             subtitle = paste("Positive values = Proportion of up-regulated proteins in",
+                              Conditions[2]))+
+        theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5, size = 11),
+              axis.text.y = element_text(size = 11),
+              panel.background = element_blank(),
+              panel.grid.major = element_blank(),
+              panel.border = element_rect(colour = "black", fill=NA, size=1.2),
+              axis.title=element_text(size=13, face="bold"),
+              legend.justification = c(0, 1),
+              plot.title = element_text(size = 15, face = "bold"),
+              plot.subtitle = element_text(size = 12, face = "plain"))
+
+prochttofigngenes
+
+
+ridgelinetofigdiff <- ridgelineroastdiff +
             labs(caption = datasetcode,
                  subtitle = paste("> 0 indicates positive regulation in",
                                   Conditions[2]))+
@@ -368,7 +392,24 @@ ridgelinetofig <- ridgelineroast +
                   plot.title = element_text(size = 15, face = "bold"),
                   plot.subtitle = element_text(size = 12, face = "plain"))
 
-ridgelinetofig
+ridgelinetofigdiff
+
+
+ridgelinetofigngenes <- ridgelineroastngenes +
+        labs(caption = datasetcode,
+             subtitle = paste("> 0 indicates positive regulation in",
+                              Conditions[2]))+
+        theme(axis.text.x = element_text(hjust = 0.5, size = 11),
+              axis.text.y = element_text(size = 11),
+              panel.background = element_blank(),
+              panel.grid.major = element_blank(),
+              panel.border = element_rect(colour = "black", fill=NA, size=1.2),
+              axis.title=element_text(size=13, face="bold"),
+              plot.title = element_text(size = 15, face = "bold"),
+              plot.subtitle = element_text(size = 12, face = "plain"))
+
+ridgelinetofigngenes
+
 
 # Change plot height according to the number of terms shown ----
 # For the density plot: 
