@@ -28,8 +28,8 @@ propChangePlot <- function(roastresult,
        #            wt = NGenes) %>%
       dplyr::mutate(DiffProp = abs(PropUp - PropDown),
                     PropDown = -PropDown,#)%>%#,
-                    FDR = round(FDR, 2),
-                    PValue = round(PValue, 2)) %>%
+                    FDR = round(FDR, 4),
+                    PValue = round(PValue, 4)) %>%
       dplyr::top_n(n = show_n_terms,
                    wt = if(top_n_by == "Difference"){DiffProp}
                            else if(top_n_by == "NGenes"){NGenes}
@@ -54,12 +54,12 @@ propChangePlot <- function(roastresult,
    if (zero_range(pvals) == TRUE){
       maxpval <- max(pvals)
       limits <- c(0,maxpval)
-      breaks <- round(seq(0, maxpval, length = 7), 2)
+      breaks <- round(seq(0, maxpval, length = 7), 4)
    } else if(zero_range(pvals) == FALSE){
       maxpval <- max(pvals)
       minpval <- min(pvals)
       limits <- c(minpval,maxpval)
-      breaks <- round(seq(minpval, maxpval, length = 7), 2)
+      breaks <- round(seq(minpval, maxpval, length = 7), 4)
    }
    
    # Plot ----

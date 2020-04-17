@@ -50,8 +50,8 @@ ridgeplotRoast <- function(roastresult,
       
       datatab <- left_join(datatab, summtab, by = "CategoryTerm") %>% ungroup() %>%
          dplyr::arrange(-meadianlo2FC) %>% filter(!NGenes <= 2) %>%
-         dplyr::mutate(FDR = round(FDR, 2),
-                       PValue = round(PValue, 2))
+         dplyr::mutate(FDR = round(FDR, 4),
+                       PValue = round(PValue, 4))
       
       zero_range <- function(x) {
          if (length(x) == 1) return(TRUE)
@@ -66,12 +66,12 @@ ridgeplotRoast <- function(roastresult,
       if (zero_range(pvals) == TRUE){
          maxpval <- max(pvals)
          limits <- c(0,maxpval)
-         breaks <- round(seq(0, maxpval, length = 7), 2)
+         breaks <- round(seq(0, maxpval, length = 7), 4)
       } else if(zero_range(pvals) == FALSE){
          maxpval <- max(pvals)
          minpval <- min(pvals)
          limits <- c(minpval,maxpval)
-         breaks <- round(seq(minpval, maxpval, length = 7), 2)
+         breaks <- round(seq(minpval, maxpval, length = 7), 4)
       }
       
       # Plot ----
