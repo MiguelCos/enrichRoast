@@ -9,7 +9,7 @@ datasetcode <- "VpRH2_vs_VpR"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
-enrichFunc <- "GO"
+enrichFunc <- "KEGG"
 
 ## *-2. ORGANISM DATABASE (Please input the name of the Bioconductor org.db you need: i.e. "org.Hs.eg.db" for human) ----
 
@@ -29,14 +29,14 @@ geneIDtype <- "UNIPROT"
 # minSetSize = 5
 # maxSetSize = 80 
 
-minSetSize = 10 
-maxSetSize = 500
+minSetSize = 30 
+maxSetSize = 400
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS -----
 # set cutoff_by = "PValue" if you have heterogeneos data and want to filter by non-adjusted p-values.
 
-pvalueCutoff <- 0.9
-cutoff_by <- "FDR" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
+pvalueCutoff <- 0.05
+cutoff_by <- "PValue" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
 
 ## *-6 EXPERIMENTAL DESIGN ----
 
@@ -77,12 +77,12 @@ colorbydens <- cutoff_by
 
 #### * 8.1.1. WHICH GO ONTOLOGY YOU DO WANT TO EXPLORE? (one of: "MF", "CC" or "BP") ----
 
-ontology = "MF"
+ontology = NULL
 
 #### * 8.1.2. DO YOU WANT TO REMOVE REDUNDANT GO TERMS?
 
-simplify <- TRUE
-cutoff <- 0.7 # how similar should be two GO terms to be considered redundant? (0.7 is recommended)
+simplify <- NULL
+cutoff <- NULL # how similar should be two GO terms to be considered redundant? (0.7 is recommended)
 # by = recommended: NOT MODIFY set equal to cutoff_by
 by = cutoff_by # if two terms are equally similar, which condition you want to use to select between them ("FDR" or "PValue")
 
@@ -90,13 +90,13 @@ by = cutoff_by # if two terms are equally similar, which condition you want to u
 
 #### * 8.2.1 DO YOU WANT TO USE A EXCLUSION LIST TO REMOVE NON-INTERSTING TERMS FROM THE FINAL OUTPUT?
 
-exclusionList <- NULL
+exclusionList <- TRUE
 
 ### * 8.3 IF "KEGG" ENRICHMENT WILL BE PERFORMED ----
 
 #### * 8.3.2 ORGANISM NAME IN KEGG TERMS (i.e. human = "hsa"; mouse = "mmu"; ...)
 
-organism <- NULL
+organism <- 'mmu'
 
 ### * 8.4 IF 'MSIGDB' ENRICHMENT WILL BE PERFORMED ----
 
@@ -347,7 +347,7 @@ if (enrichFunc == "GO"){
 
 
 prochttofigdiff  <- prochangeplotdiff + 
-            labs(caption = paste0(datasetcode," // ","Showing top ",show_n_terms," terms by |ProportionUp - ProportionDown|"),
+            labs(caption = paste0(datasetcode," // ","Showing top ",show_n_termsprop," terms by |ProportionUp - ProportionDown|"),
                  subtitle = paste("Positive values = Proportion of up-regulated proteins in",
                                   Conditions[2]))+
             theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5, size = 11),
@@ -364,7 +364,7 @@ prochttofigdiff
 
 
 prochttofigngenes  <- prochangeplotngenes + 
-        labs(caption = paste0(datasetcode," // ","Showing top ",show_n_terms," terms by N Genes per set"),
+        labs(caption = paste0(datasetcode," // ","Showing top ",show_n_termsprop," terms by N Genes per set"),
              subtitle = paste("Positive values = Proportion of up-regulated proteins in",
                               Conditions[2]))+
         theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5, size = 11),
