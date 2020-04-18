@@ -83,7 +83,7 @@ ontology = NULL
 
 simplify <- NULL
 cutoff <- NULL # how similar should be two GO terms to be considered redundant?
-by = NULL # if two terms are equally similar, which condition you want to use to select between them
+by = cutoff_by # if two terms are equally similar, which condition you want to use to select between them
 
 ### * 8.2. IF "REACTOME" OR "KEGG" ENRICHMENT WILL BE PERFORMED ---- 
 
@@ -114,7 +114,7 @@ specific_category = NULL  # i.e. "NABA"... A string that can be used to subset y
 
 ### Install required packages if necessary
 
-packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2")
+packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2", "qdapTools", "reshape2", "backports")
 
 biopackgs <- c(orgDB, "limma", "reactome.db", "clusterProfiler",
                "msigdbr", "KEGGREST", "AnnotationDbi", "GO.db")
@@ -291,20 +291,32 @@ if (enrichFunc == "GO"){
 
 ## Visualization ----
 
-# Proportions-change plot ----
+# Proportions-change plots ----
 source("R/propChangePlot.R")
 
-prochangeplot <- propChangePlot(roast_result,
-                                show_n_terms = show_n_termsprop,
-                                colorby = colorbyprop)
+prochangeplotdiff <- propChangePlot(roast_result,
+                                    show_n_terms = show_n_termsprop,
+                                    colorby = colorbyprop,
+                                    top_n_by = "Difference")
+
+prochangeplotngenes <- propChangePlot(roast_result,
+                                      show_n_terms = show_n_termsprop,
+                                      colorby = colorbyprop,
+                                      top_n_by = "NGenes")
 
 # Ridge-line density plots -----
 
 source("R/ridgleplotRoast.R")
 
-ridgelineroast <- ridgeplotRoast(roast_result,
-                                 show_n_terms = show_n_termsdens,
-                                 colorby = colorbydens)
+ridgelineroastdiff <- ridgeplotRoast(roast_result,
+                                     show_n_terms = show_n_termsdens,
+                                     colorby = colorbydens,
+                                     top_n_by = "Difference")
+
+ridgelineroastngenes <- ridgeplotRoast(roast_result,
+                                       show_n_terms = show_n_termsdens,
+                                       colorby = colorbydens,
+                                       top_n_by = "NGenes")
 
 
 ## Generate outputs ----
@@ -407,8 +419,8 @@ if (enrichFunc == "GO"){
 ### outputs for figures ----
 
 
-prochttofig  <- prochangeplot + 
-        labs(caption = datasetcode,
+prochttofigdiff  <- prochangeplotdiff + 
+        labs(caption = paste0(datasetcode," // ","Showing top ",show_n_terms," terms by |ProportionUp - ProportionDown|"),
              subtitle = paste("Positive values = Proportion of up-regulated proteins in",
                               Conditions[2]))+
         theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5, size = 11),
@@ -421,9 +433,27 @@ prochttofig  <- prochangeplot +
               plot.title = element_text(size = 15, face = "bold"),
               plot.subtitle = element_text(size = 12, face = "plain"))
 
-prochttofig
+prochttofigdiff
 
-ridgelinetofig <- ridgelineroast +
+
+prochttofigngenes  <- prochangeplotngenes + 
+        labs(caption = paste0(datasetcode," // ","Showing top ",show_n_terms," terms by N Genes per set"),
+             subtitle = paste("Positive values = Proportion of up-regulated proteins in",
+                              Conditions[2]))+
+        theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5, size = 11),
+              axis.text.y = element_text(size = 11),
+              panel.background = element_blank(),
+              panel.grid.major = element_blank(),
+              panel.border = element_rect(colour = "black", fill=NA, size=1.2),
+              axis.title=element_text(size=13, face="bold"),
+              legend.justification = c(0, 1),
+              plot.title = element_text(size = 15, face = "bold"),
+              plot.subtitle = element_text(size = 12, face = "plain"))
+
+prochttofigngenes
+
+
+ridgelinetofigdiff <- ridgelineroastdiff +
         labs(caption = datasetcode,
              subtitle = paste("> 0 indicates positive regulation in",
                               Conditions[2]))+
@@ -436,7 +466,23 @@ ridgelinetofig <- ridgelineroast +
               plot.title = element_text(size = 15, face = "bold"),
               plot.subtitle = element_text(size = 12, face = "plain"))
 
-ridgelinetofig
+ridgelinetofigdiff
+
+
+ridgelinetofigngenes <- ridgelineroastngenes +
+        labs(caption = datasetcode,
+             subtitle = paste("> 0 indicates positive regulation in",
+                              Conditions[2]))+
+        theme(axis.text.x = element_text(hjust = 0.5, size = 11),
+              axis.text.y = element_text(size = 11),
+              panel.background = element_blank(),
+              panel.grid.major = element_blank(),
+              panel.border = element_rect(colour = "black", fill=NA, size=1.2),
+              axis.title=element_text(size=13, face="bold"),
+              plot.title = element_text(size = 15, face = "bold"),
+              plot.subtitle = element_text(size = 12, face = "plain"))
+
+ridgelinetofigngenes
 
 # Change plot height according to the number of terms shown ----
 # For the density plot: 
@@ -496,8 +542,19 @@ if (show_n_termsprop == 25){
 }
 
 # Generate Ridgeline plot ----
-ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
-       plot = ridgelinetofig,
+ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot_topdiff","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
+       plot = ridgelinetofigdiff,
+       device = 'tiff',
+       width = 297,
+       height = heightdens,
+       units = 'mm',
+       dpi = 300,
+       compression = "lzw")
+
+
+
+ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot_topngenes","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
+       plot = ridgelinetofigngenes,
        device = 'tiff',
        width = 297,
        height = heightdens,
@@ -507,8 +564,8 @@ ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot","_",enrichF
 
 
 # Generate figure for prop-change plot ----
-ggsave(filename = here::here(paste0("Outputs/Figures/Prop_Change_Plot","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
-       plot = prochttofig,
+ggsave(filename = here::here(paste0("Outputs/Figures/Prop_Change_Plot_topdiff","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
+       plot = prochttofigdiff,
        device = 'tiff',
        width = 297,
        height = heightprop,
@@ -517,11 +574,21 @@ ggsave(filename = here::here(paste0("Outputs/Figures/Prop_Change_Plot","_",enric
        compression = "lzw")
 
 
+ggsave(filename = here::here(paste0("Outputs/Figures/Prop_Change_Plot_topngenes","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
+       plot = prochttofigngenes,
+       device = 'tiff',
+       width = 297,
+       height = heightprop,
+       units = 'mm',
+       dpi = 300,
+       compression = "lzw")
+
+
+
 # Generate report ----
 excl <- roast_result$exclusionMessage
 
 rmarkdown::render(input = here::here("R/renderReport.R"),
                   output_file = here::here(paste0("Outputs/Analysis_report","_",enrichFunc,ontology,category,subcategory,specific_category,
                                                   "_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".html")))
-
 

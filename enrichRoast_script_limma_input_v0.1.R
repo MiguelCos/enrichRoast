@@ -115,7 +115,8 @@ specific_category = NULL  # i.e. "NABA"... A string that can be used to subset y
 
 ### Install required packages if necessary
 
-packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2", "qdapTools")
+packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2", "qdapTools", "reshape2",
+              "backports")
 
 biopackgs <- c(orgDB, "limma", "reactome.db", "clusterProfiler",
                "msigdbr", "KEGGREST", "AnnotationDbi", "GO.db")
@@ -469,6 +470,7 @@ if (show_n_termsprop == 25){
 }
 
 # Generate Ridgeline plot ----
+# Generate Ridgeline plot ----
 ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot_topdiff","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
        plot = ridgelinetofigdiff,
        device = 'tiff',
@@ -509,6 +511,7 @@ ggsave(filename = here::here(paste0("Outputs/Figures/Prop_Change_Plot_topngenes"
        units = 'mm',
        dpi = 300,
        compression = "lzw")
+
 
 
 # Generate report ----
