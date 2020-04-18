@@ -9,7 +9,7 @@ datasetcode <- "VpRH2_vs_VpR"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
-enrichFunc <- "MSIGDB"
+enrichFunc <- "GO"
 
 ## *-2. ORGANISM DATABASE (Please input the name of the Bioconductor org.db you need: i.e. "org.Hs.eg.db" for human) ----
 
@@ -30,13 +30,13 @@ geneIDtype <- "UNIPROT"
 # maxSetSize = 80 
 
 minSetSize = 10 
-maxSetSize = 300
+maxSetSize = 500
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS -----
 # set cutoff_by = "PValue" if you have heterogeneos data and want to filter by non-adjusted p-values.
 
-pvalueCutoff <- 0.05
-cutoff_by <- "PValue" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
+pvalueCutoff <- 0.9
+cutoff_by <- "FDR" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
 
 ## *-6 EXPERIMENTAL DESIGN ----
 
@@ -77,12 +77,12 @@ colorbydens <- cutoff_by
 
 #### * 8.1.1. WHICH GO ONTOLOGY YOU DO WANT TO EXPLORE? (one of: "MF", "CC" or "BP") ----
 
-ontology = NULL
+ontology = "MF"
 
 #### * 8.1.2. DO YOU WANT TO REMOVE REDUNDANT GO TERMS?
 
-simplify <- FALSE
-cutoff <- NULL # how similar should be two GO terms to be considered redundant? (0.7 is recommended)
+simplify <- TRUE
+cutoff <- 0.7 # how similar should be two GO terms to be considered redundant? (0.7 is recommended)
 # by = recommended: NOT MODIFY set equal to cutoff_by
 by = cutoff_by # if two terms are equally similar, which condition you want to use to select between them ("FDR" or "PValue")
 
@@ -106,7 +106,7 @@ organism <- NULL
 # subcategory = "CP"
 # specific_category = "NABA"
 
-category = "H" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+category = NULL # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
 subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
 specific_category = NULL  # i.e. "NABA"... A string that can be used to subset your categories.
 
@@ -115,7 +115,7 @@ specific_category = NULL  # i.e. "NABA"... A string that can be used to subset y
 
 ### Install required packages if necessary
 
-packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2")
+packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2", "qdapTools")
 
 biopackgs <- c(orgDB, "limma", "reactome.db", "clusterProfiler",
                "msigdbr", "KEGGREST", "AnnotationDbi", "GO.db")
@@ -469,8 +469,19 @@ if (show_n_termsprop == 25){
 }
 
 # Generate Ridgeline plot ----
-ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
-       plot = ridgelinetofig,
+ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot_topdiff","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
+       plot = ridgelinetofigdiff,
+       device = 'tiff',
+       width = 297,
+       height = heightdens,
+       units = 'mm',
+       dpi = 300,
+       compression = "lzw")
+
+
+
+ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot_topngenes","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
+       plot = ridgelinetofigngenes,
        device = 'tiff',
        width = 297,
        height = heightdens,
@@ -480,8 +491,18 @@ ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot","_",enrichF
 
 
 # Generate figure for prop-change plot ----
-ggsave(filename = here::here(paste0("Outputs/Figures/Prop_Change_Plot","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
-       plot = prochttofig,
+ggsave(filename = here::here(paste0("Outputs/Figures/Prop_Change_Plot_topdiff","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
+       plot = prochttofigdiff,
+       device = 'tiff',
+       width = 297,
+       height = heightprop,
+       units = 'mm',
+       dpi = 300,
+       compression = "lzw")
+
+
+ggsave(filename = here::here(paste0("Outputs/Figures/Prop_Change_Plot_topngenes","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
+       plot = prochttofigngenes,
        device = 'tiff',
        width = 297,
        height = heightprop,

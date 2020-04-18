@@ -19,6 +19,7 @@ roastMSigDB <- function(data,
       require(dplyr) || stop("Package dplyr is required")
       require(msigdbr) || stop("Package msigdbr is required")
       require(stringr) || stop("Package stringr is required")
+      require(qdapTools)
 
       
       ## Generate matrix for roast ----

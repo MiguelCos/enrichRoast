@@ -29,6 +29,7 @@ roastGO <- function(data,
       require(GO.db) #|| stop("Package reactome.db is required")
       require(AnnotationDbi)
       require(dplyr)
+      require(qdapTools)
       
       ## Generate matrix for roast ----
    

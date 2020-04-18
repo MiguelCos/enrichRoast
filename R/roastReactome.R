@@ -33,6 +33,7 @@ roastReactome <- function(data,
       require(clusterProfiler) || stop("Package clusterProfiler is required")
       require(dplyr)
       require(stringr)
+      require(qdapTools)
    
    ## Generate matrix to roast ----
    

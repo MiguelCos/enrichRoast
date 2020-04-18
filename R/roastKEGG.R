@@ -18,6 +18,7 @@ roastKEGG <- function(data,
       suppressMessages(require(clusterProfiler)) #|| stop("Package clusterProfiler is required")
       require(dplyr) #|| stop("Package dplyr is required")
       require(stringr) #|| stop("Package stringr is required")
+      require(qdapTools)
       
       ## Generate matrix to roast ----
       
