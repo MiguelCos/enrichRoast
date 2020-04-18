@@ -33,6 +33,8 @@ print(ridgelinetofigngenes)
 #+ fig.width=11.7, fig.height= 7.1, echo = FALSE, message = FALSE
 print(ridgelinetofigdiff)
 #' 
+#' **Note: Biological categories enriched with less than 3 genes/proteins were excluded from the density plots**
+#' 
 #'### Organism database used: **`r orgDB`**
 #'### User parameters: 
 #' 
