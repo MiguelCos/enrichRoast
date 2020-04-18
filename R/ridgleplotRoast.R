@@ -1,9 +1,9 @@
 ## ridgeplotRoast function ----
 
-show_n_terms <- 30
-roastresult <- roast_result
-colorby <- cutoff_by
-top_n_by <- "NGenes" # "NGenes"
+#show_n_terms <- 30
+#roastresult <- roast_result
+#colorby <- cutoff_by
+#top_n_by <- "Difference" # "NGenes"
 
 ridgeplotRoast <- function(roastresult,
                            show_n_terms = 25,
