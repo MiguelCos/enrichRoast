@@ -30,7 +30,7 @@ geneIDtype <- "UNIPROT"
 # maxSetSize = 80 
 
 minSetSize = 30 
-maxSetSize = 400
+maxSetSize = 350
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS -----
 # set cutoff_by = "PValue" if you have heterogeneos data and want to filter by non-adjusted p-values.
@@ -469,7 +469,6 @@ if (show_n_termsprop == 25){
         heightpropin <- heightprop/25.4
 }
 
-# Generate Ridgeline plot ----
 # Generate Ridgeline plot ----
 ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot_topdiff","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
        plot = ridgelinetofigdiff,

@@ -260,7 +260,8 @@ if (enrichFunc == "GO"){
                                           pvalueCutoff = pvalueCutoff,
                                           exclusionList = exclusionList,
                                           species = species,
-                                          cutoff_by = cutoff_by)
+                                          cutoff_by = cutoff_by,
+                                          Paired = Paired)
 } else if (enrichFunc == "KEGG"){
             source(file = "R/roastKEGG.R")
             
@@ -272,7 +273,8 @@ if (enrichFunc == "GO"){
                                       pvalueCutoff = pvalueCutoff,
                                       exclusionList = exclusionList,
                                       organism = organism,
-                                      cutoff_by = cutoff_by)
+                                      cutoff_by = cutoff_by,
+                                      Paired = Paired)
 } else if (enrichFunc == "MSIGDB"){
             source(file = "R/roastMSigDB.R")
             
@@ -286,7 +288,8 @@ if (enrichFunc == "GO"){
                                         category = category, 
                                         subcategory = subcategory,
                                         specific_category = specific_category,
-                                        cutoff_by = cutoff_by)
+                                        cutoff_by = cutoff_by,
+                                        Paired = Paired)
 }
 
 ## Visualization ----
@@ -397,6 +400,7 @@ if (enrichFunc == "GO"){
                     sep = "\t",
                     row.names = FALSE)
         
+        
 } else if (enrichFunc == "MSIGDB"){
         
         write.table(x = roast_result$roastOutput,
@@ -420,7 +424,7 @@ if (enrichFunc == "GO"){
 
 
 prochttofigdiff  <- prochangeplotdiff + 
-        labs(caption = paste0(datasetcode," // ","Showing top ",show_n_terms," terms by |ProportionUp - ProportionDown|"),
+        labs(caption = paste0(datasetcode," // ","Showing top ",show_n_termsprop," terms by |ProportionUp - ProportionDown|"),
              subtitle = paste("Positive values = Proportion of up-regulated proteins in",
                               Conditions[2]))+
         theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5, size = 11),
@@ -437,7 +441,7 @@ prochttofigdiff
 
 
 prochttofigngenes  <- prochangeplotngenes + 
-        labs(caption = paste0(datasetcode," // ","Showing top ",show_n_terms," terms by N Genes per set"),
+        labs(caption = paste0(datasetcode," // ","Showing top ",show_n_termsprop," terms by N Genes per set"),
              subtitle = paste("Positive values = Proportion of up-regulated proteins in",
                               Conditions[2]))+
         theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5, size = 11),
@@ -483,6 +487,8 @@ ridgelinetofigngenes <- ridgelineroastngenes +
               plot.subtitle = element_text(size = 12, face = "plain"))
 
 ridgelinetofigngenes
+# Change plot height according to the number of terms shown ----
+# For the density plot: 
 
 # Change plot height according to the number of terms shown ----
 # For the density plot: 
@@ -540,7 +546,6 @@ if (show_n_termsprop == 25){
         heightprop <- 250
         heightpropin <- heightprop/25.4
 }
-
 # Generate Ridgeline plot ----
 ggsave(filename = here::here(paste0("Outputs/Figures/Ridgeline_plot_topdiff","_",enrichFunc,ontology,"_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".tiff")),
        plot = ridgelinetofigdiff,
@@ -591,4 +596,3 @@ excl <- roast_result$exclusionMessage
 rmarkdown::render(input = here::here("R/renderReport.R"),
                   output_file = here::here(paste0("Outputs/Analysis_report","_",enrichFunc,ontology,category,subcategory,specific_category,
                                                   "_","min",minSetSize,"max",maxSetSize,"_","pValueCutoff",pvalueCutoff,cutoff_by,".html")))
-
