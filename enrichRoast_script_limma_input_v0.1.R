@@ -209,7 +209,6 @@ if (enrichFunc == "GO"){
                                     minSetSize = minSetSize,
                                     maxSetSize = maxSetSize,
                                     pvalueCutoff = pvalueCutoff,
-                                    cutoff_by = cutoff_by,
                                     species = species,
                                     category = category, 
                                     subcategory = subcategory,
