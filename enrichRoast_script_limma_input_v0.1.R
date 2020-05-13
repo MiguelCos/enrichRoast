@@ -9,7 +9,7 @@ datasetcode <- "E14.5 vs E9.5"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
-enrichFunc <- "KEGG"
+enrichFunc <- "MSIGDB"
 
 ## *-2. ORGANISM DATABASE (Please input the name of the Bioconductor org.db you need: i.e. "org.Hs.eg.db" for human) ----
 
@@ -106,9 +106,9 @@ organism <- 'mmu'
 # subcategory = "CP"
 # specific_category = "NABA"
 
-category = NULL # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
-subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
-specific_category = NULL  # i.e. "NABA"... A string that can be used to subset your categories.
+category = "C2" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+subcategory = "CP" # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
+specific_category = "NABA"  # i.e. "NABA"... A string that can be used to subset your categories.
 
 ## PLEASE RUN THE NEXT LINES OF CODE TO CORROBORATE IF YOU HAVE INSTALLED THE REQUIRED PACKAGES ----
 # Note: If some installation is needed, it could take a few minutes to finish.
