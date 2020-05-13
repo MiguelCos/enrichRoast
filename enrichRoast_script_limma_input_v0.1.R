@@ -1,6 +1,7 @@
 ## Stand-alone script for running limma::roast starting from a typical Limma input ----
 ## enrichRoast script. v 0.1 . Miguel Cosenza 24.03.2020 
 
+## PLEASE MODIFY THE INPUT IN THE SCRIPT BY ANSWERING THE QUESIONS
 
 ## PLEASE GIVE A CODE TO IDENTIFY YOUR DATA ----
 
@@ -28,13 +29,14 @@ geneIDtype <- "UNIPROT"
 # minSetSize = 5
 # maxSetSize = 80 
 
-minSetSize = 10
+minSetSize = 10 
 maxSetSize = 300
 
-## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS (set to 999 for exploration and 9999 for final p-value) ----
+## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS -----
+# set cutoff_by = "PValue" if you have heterogeneos data and want to filter by non-adjusted p-values.
 
 pvalueCutoff <- 0.05
-n_rotations = 999
+cutoff_by <- "PValue" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
 
 ## *-6 EXPERIMENTAL DESIGN ----
 
@@ -53,9 +55,9 @@ Conditions <- c("E9.5", "E14.5") # condition1, condistion2
 show_n_termsprop <- 30 # how many enriched terms do you want to plot?
 
 #### * 7.1.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
-
+# Recomended: NOT MODIFY: this way the Color-coding for the plots will be the same as cutoff_by
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
-colorbyprop <- "FDR" 
+colorbyprop <- cutoff_by 
 
 ### * 7.2. RIDGELINE DENSITY PLOTS ---
 
@@ -63,9 +65,9 @@ colorbyprop <- "FDR"
 show_n_termsdens <- 30 # how many enriched terms do you want to plot?
 
 #### * 7.2.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
-
+# Recomended: NOT MODIFY: this way the Color-coding for the plots will be the same as cutoff_by
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
-colorbydens <- "FDR" 
+colorbydens <- cutoff_by
 
 ## *-8. OPTIONAL PARAMETERS: FILL THESE UP DEPENDING ON WHAT YOU CHOOSE IN SECTION *-1. ----
 
@@ -81,7 +83,8 @@ ontology = NULL
 
 simplify <- NULL
 cutoff <- NULL # how similar should be two GO terms to be considered redundant? (0.7 is recommended)
-by = NULL # if two terms are equally similar, which condition you want to use to select between them ("FDR")
+# by = recommended: NOT MODIFY set equal to cutoff_by
+by = cutoff_by # if two terms are equally similar, which condition you want to use to select between them ("FDR" or "PValue")
 
 ### * 8.2. IF "REACTOME" OR "KEGG" ENRICHMENT WILL BE PERFORMED ---- 
 
@@ -93,7 +96,7 @@ exclusionList <- TRUE
 
 #### * 8.3.2 ORGANISM NAME IN KEGG TERMS (i.e. human = "hsa"; mouse = "mmu"; ...)
 
-organism <- "mmu"
+organism <- 'mmu'
 
 ### * 8.4 IF 'MSIGDB' ENRICHMENT WILL BE PERFORMED ----
 
@@ -106,13 +109,14 @@ organism <- "mmu"
 category = NULL # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
 subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
 specific_category = NULL  # i.e. "NABA"... A string that can be used to subset your categories.
+
 ## PLEASE RUN THE NEXT LINES OF CODE TO CORROBORATE IF YOU HAVE INSTALLED THE REQUIRED PACKAGES ----
 # Note: If some installation is needed, it could take a few minutes to finish.
 
 ### Install required packages if necessary
 
 packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2", "qdapTools", "reshape2",
-              "backports", "forcats", "statmod")
+              "backports", "statmod", "forcats")
 
 biopackgs <- c(orgDB, "limma", "reactome.db", "clusterProfiler",
                "msigdbr", "KEGGREST", "AnnotationDbi", "GO.db")
