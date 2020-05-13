@@ -39,7 +39,8 @@ ridgeplotRoast <- function(roastresult,
          tidyr::pivot_longer(cols = c(PropDown, PropUp),
                              names_to = "PropDirection",
                              values_to = "Proportion") %>%
-         dplyr::group_by(CategoryTerm, NGenes) 
+         dplyr::group_by(CategoryTerm, NGenes) %>% ungroup() %>%
+         mutate(CategoryTerm = stringr::str_wrap(CategoryTerm, width = 30))
       
       datatab <- dplyr::filter(toridge,
                                CategoryTerm %in% unique(toproplot$CategoryTerm)) #%>% 

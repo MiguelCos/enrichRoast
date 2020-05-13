@@ -39,7 +39,8 @@ propChangePlot <- function(roastresult,
                           values_to = "Proportion") %>%
       #dplyr::top_n(n = show_n_terms,
       #             wt = NGenes)
-      dplyr::group_by(CategoryTerm, NGenes) 
+      dplyr::group_by(CategoryTerm, NGenes) %>% ungroup() %>%
+      mutate(CategoryTerm = stringr::str_wrap(CategoryTerm, width = 30))
    
    zero_range <- function(x) {
       if (length(x) == 1) return(TRUE)
