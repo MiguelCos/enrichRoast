@@ -20,30 +20,49 @@ if (length(setdiff(biopackgs, rownames(installed.packages()))) > 0){
             
 }
 
+## HOW MANY KEGG GENE SETS DO YOU WANT TO VISUALIZE? ----
+
+show_n_terms <- 30
+
+## HOW DO YOU WANT TO SELECT THE TOP N TERMS? (BY N GENES PER TERM "NGenes" OR by bigger differences in the proportions "Difference") ----
+
+# "NGenes" or "Difference" / "NGenes" is default
+
+top_n_by <- "NGenes" 
+
 ## Load required packages ----
 
 library(pathview)
 library(magrittr)
 library(pathview)
-library(dplyrW)
-
-# * 1. RUN THE NEXT COMMAND TO visualize the enriched KEGG gene sets after enrichRoast and to extract their respective pathway ID ----
-
-View(roast_result$log2FCs %>% dplyr::select(CategoryID, CategoryTerm) %>% dplyr::distinct())
-
-#### * 2. WHICH KEGG PATHWAY YOU WANT TO MAP TO YOUR PROTEIN IDS? ----
-
-# Please provide the code of the KEGG pathway that you want to explore 
-# The code should be supplied without the organism prefix.
-# Example: 'Lysosome' gene set for mouse = mmu04142; then, you must provide "04142"
-
-keggpath <- "04144"
+library(dplyr)
 
 ### SCRIPT EXECUTION -----
 
-expr_data <- roast_result$log2FCs$log2FC
-names(expr_data) <- roast_result$log2FCs$ENTREZID
+roastOutput <- roast_result$roastOutput
+
+topNterms <- dplyr::select(roastOutput,
+                           NGenes, Direction, PropUp, PropDown, CategoryTerm,
+                           FDR, PValue) %>%
+            dplyr::mutate(DiffProp = abs(PropUp - PropDown),
+                          PropDown = -PropDown,
+                          FDR = round(FDR, 4),
+                          PValue = round(PValue, 4)) %>%
+            dplyr::top_n(n = show_n_terms,
+                         wt = if(top_n_by == "Difference"){DiffProp}
+                         else if(top_n_by == "NGenes"){NGenes})
+
+log2fcs <- roast_result$log2FCs %>% filter(CategoryTerm %in% topNterms$CategoryTerm)
+
+expr_data <- log2fcs$log2FC
+names(expr_data) <- log2fcs$ENTREZID
+
+keggpaths <- log2fcs$CategoryID %>% str_sub(string = ., start = 4, end = 8) %>% unique()
 
 
-pathview(gene.data = expr_data, pathway.id = keggpath,
-                   species = organism)
+for (i in 1:show_n_terms){
+            pathview(gene.data = expr_data, pathway.id = keggpaths[i],
+                     species = organism, kegg.dir = ".", kegg.native = TRUE,same.layer=TRUE)
+}
+
+
