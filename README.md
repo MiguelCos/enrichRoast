@@ -48,12 +48,10 @@ This repo contains a series of functions and scripts to facilitate the execution
 The `visualizeKEGG.R` script would help you map your enriched KEGG pathways to the quantified proteins in your data set. This script should only be executed after the ROAST enrichment analysis (after executing any of the previous `enrichRoast_**` scripts).
 
 1. Open the `visualizeKEGG.R` script.
-2. Execute the lines between 6 and 28 to check for the proper installation and loading of the required packages.
-3. Execute the line `32`. This will prompt the list of enriched KEGG gene sets in your data along with their corresponding pathway code.
-4. Select the code of the interesting pathway. 
-5. Modify the input at line `40`
-6. Execute the rest of the script.
-7. A `.png` file should be generated in your working directory with the desired visualization.
+2. Execute the lines between 6 and 21 to check for the proper installation and loading of the required packages.
+3. Modify the input in lines 25 and 31 according to the questions in the comments.
+4. Execute the rest of the script.
+5. A number of `png` files with the protein to KEGG pathway mapping should have been created in your working directory.
 
 ### Notes (things to be aware of, implementations required, etc.):
 
