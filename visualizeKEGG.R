@@ -37,7 +37,7 @@ library(magrittr)
 library(pathview)
 library(dplyr)
 
-### SCRIPT EXECUTION -----
+### SCRIPT EXECUTION -------
 
 roastOutput <- roast_result$roastOutput
 
