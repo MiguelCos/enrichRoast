@@ -7,7 +7,7 @@
 propChangePlot <- function(roastresult,
                            show_n_terms = 25,
                            colorby = "FDR",
-                           top_n_by = "NGenes"){ # one of "Difference" or "NGenes"
+                           top_n_by = "NGenes"){ # one of "Difference", "NGenes", "PValue" or "FDR"
    
    # Load required packages ----
    
@@ -21,19 +21,21 @@ propChangePlot <- function(roastresult,
    
    roastOutput <- roastresult$roastOutput
    
-   toproplot <- dplyr::select(roastOutput,
+   toproplot <- dplyr::select(roast_result$roastOutput,
                               NGenes, Direction, PropUp, PropDown, CategoryTerm,
                               FDR, PValue) %>%
       #dplyr::top_n(n = show_n_terms,
        #            wt = NGenes) %>%
       dplyr::mutate(DiffProp = abs(PropUp - PropDown),
-                    PropDown = -PropDown,#)%>%#,
-                    FDR = round(FDR, 4),
-                    PValue = round(PValue, 4)) %>%
+                    PropDown = -PropDown) %>%
       dplyr::top_n(n = show_n_terms,
                    wt = if(top_n_by == "Difference"){DiffProp}
-                           else if(top_n_by == "NGenes"){NGenes}
+                           else if(top_n_by == "NGenes"){NGenes} 
+                                   else if(top_n_by == "PValue"){-PValue}
+                                           else if(top_n_by == "FDR"){-FDR}
                    ) %>%
+      #dplyr::mutate(FDR = round(FDR, 4),
+                    #PValue = round(PValue, 4)) %>%
       tidyr::pivot_longer(cols = c(PropDown, PropUp),
                           names_to = "PropDirection",
                           values_to = "Proportion") %>%

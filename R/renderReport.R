@@ -21,6 +21,16 @@ print(prochttofigngenes)
 #' 
 #+ fig.width=11.7, fig.height= 7.1, echo = FALSE
 print(prochangeplotdiff)  
+#' 
+#'##### Showing the top `r show_n_termsprop` categories with the lowest non-adjusted p-value. 
+#' 
+#+ fig.width=11.7, fig.height= 7.1, echo = FALSE
+print(prochangeplotpval)  
+#'
+#'##### Showing the top `r show_n_termsprop` categories with the lowest FDR. 
+#'
+#+ fig.width=11.7, fig.height= 7.1, echo = FALSE
+print(prochangeplotfdr)  
 #'
 #'#### Ridgeline log2(FC) density plots
 #'
@@ -32,6 +42,16 @@ print(ridgelinetofigngenes)
 #' 
 #+ fig.width=11.7, fig.height= 7.1, echo = FALSE, message = FALSE
 print(ridgelinetofigdiff)
+#'
+#'##### Showing the top `r show_n_termsdens` categories with the the lowest non-adjusted p-value.
+#' 
+#+ fig.width=11.7, fig.height= 7.1, echo = FALSE, message = FALSE
+print(ridgelineroastpval)
+#' 
+#' #'##### Showing the top `r show_n_termsdens` categories with the the lowest FDR.
+#' 
+#+ fig.width=11.7, fig.height= 7.1, echo = FALSE, message = FALSE
+print(ridgelineroastfdr)
 #' 
 #' **Note: Biological categories enriched with less than 3 genes/proteins were excluded from the density plots**
 #' 
