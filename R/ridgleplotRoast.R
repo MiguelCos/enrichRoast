@@ -1,14 +1,14 @@
 ## ridgeplotRoast function ----
 
-#show_n_terms <- 30
-#roastresult <- roast_result
-#colorby <- cutoff_by
-#top_n_by <- "Difference" # "NGenes"
+show_n_terms <- 30
+roastresult <- roast_result
+colorby <- cutoff_by
+top_n_by <- "Difference" # "NGenes"
 
 ridgeplotRoast <- function(roastresult,
                            show_n_terms = 25,
                            colorby = "FDR",
-                           top_n_by = "NGenes"){ # one of "Difference" or "NGenes"
+                           top_n_by = "NGenes"){ # one of "Difference" or "NGenes" or "PValue" or "FDR"
       
       # Load required packages 
       
@@ -34,7 +34,9 @@ ridgeplotRoast <- function(roastresult,
                        PropDown = -PropDown) %>%
          dplyr::top_n(n = show_n_terms,
                       wt = if(top_n_by == "Difference"){DiffProp}
-                      else if(top_n_by == "NGenes"){NGenes}
+                      else if(top_n_by == "NGenes"){NGenes} 
+                              else if(top_n_by == "PValue"){-PValue} 
+                                       else if(top_n_by == "FDR"){-FDR}
          ) %>%
          tidyr::pivot_longer(cols = c(PropDown, PropUp),
                              names_to = "PropDirection",
@@ -50,9 +52,9 @@ ridgeplotRoast <- function(roastresult,
          dplyr::summarise(meadianlo2FC = median(log2FC))
       
       datatab <- left_join(datatab, summtab, by = "CategoryTerm") %>% ungroup() %>%
-         dplyr::arrange(-meadianlo2FC) %>% filter(!NGenes <= 2) %>%
-         dplyr::mutate(FDR = round(FDR, 4),
-                       PValue = round(PValue, 4))
+         dplyr::arrange(-meadianlo2FC) %>% filter(!NGenes <= 2) #%>%
+         #dplyr::mutate(FDR = round(FDR, 4),
+         #              PValue = round(PValue, 4))
       
       zero_range <- function(x) {
          if (length(x) == 1) return(TRUE)
