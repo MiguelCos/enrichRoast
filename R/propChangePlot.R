@@ -52,7 +52,7 @@ propChangePlot <- function(roastresult,
    
    pvals <- dplyr::pull(toproplot, eval(as.name(colorby)))
    
-   if(isEmpty(pvals)){stop("Error: no terms to plot")}
+   #if(isEmpty(pvals)){stop("Error: no terms to plot")}
    
    if (zero_range(pvals) == TRUE){
       maxpval <- max(pvals)
