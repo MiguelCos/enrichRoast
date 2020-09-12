@@ -5,7 +5,7 @@
 
 ## PLEASE GIVE A CODE TO IDENTIFY YOUR DATA ----
 
-datasetcode <- "Cntrl vs VpR"
+datasetcode <- "Dataset code"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
@@ -45,7 +45,7 @@ cutoff_by <- "FDR" # this must be "FDR" or "PValue". "FDR" is recomender unless 
 condition1 <- 6 # number of samples associated to the first condition (treatment, stage, patient, etc...)
 condition2 <- 6 # number of samples associated to the second condition 
 
-Conditions <- c("Control", "VpR") # condition1, condistion2
+Conditions <- c("Control", "Treatment") # condition1, condistion2
 
 ## *-7. VISUALIZATION PARAMTERS: ----
 
@@ -240,8 +240,6 @@ prochangeplotfdr <- propChangePlot(roast_result,
                                     colorby = "FDR",
                                     top_n_by = "FDR")
 
-# Ridge-line density plots -----
-
 source("R/ridgleplotRoast.R")
 
 ridgelineroastdiff <- ridgeplotRoast(roast_result,
@@ -255,15 +253,14 @@ ridgelineroastngenes <- ridgeplotRoast(roast_result,
                                        top_n_by = "NGenes")
 
 ridgelineroastpval <- ridgeplotRoast(roast_result,
-                                       show_n_terms = show_n_termsdens,
-                                       colorby = "PValue",
-                                       top_n_by = "PValue")
+                                     show_n_terms = show_n_termsdens,
+                                     colorby = "PValue",
+                                     top_n_by = "PValue")
 
 ridgelineroastfdr <- ridgeplotRoast(roast_result,
-                                     show_n_terms = show_n_termsdens,
-                                     colorby = colorbydens,
-                                     top_n_by = "FDR")
-
+                                    show_n_terms = show_n_termsdens,
+                                    colorby = "FDR",
+                                    top_n_by = "FDR")
 ## Generate outputs ----
 
 ### Outputs for tabular data 

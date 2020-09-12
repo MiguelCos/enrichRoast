@@ -1,10 +1,5 @@
 ## ridgeplotRoast function ----
 
-show_n_terms <- 30
-roastresult <- roast_result
-colorby <- cutoff_by
-top_n_by <- "Difference" # "NGenes"
-
 ridgeplotRoast <- function(roastresult,
                            show_n_terms = 25,
                            colorby = "FDR",
@@ -35,26 +30,27 @@ ridgeplotRoast <- function(roastresult,
          dplyr::top_n(n = show_n_terms,
                       wt = if(top_n_by == "Difference"){DiffProp}
                       else if(top_n_by == "NGenes"){NGenes} 
-                              else if(top_n_by == "PValue"){-PValue} 
-                                       else if(top_n_by == "FDR"){-FDR}
+                      else if(top_n_by == "PValue"){-PValue} 
+                      else if(top_n_by == "FDR"){-FDR}
          ) %>%
          tidyr::pivot_longer(cols = c(PropDown, PropUp),
                              names_to = "PropDirection",
                              values_to = "Proportion") %>%
          dplyr::group_by(CategoryTerm, NGenes) %>% ungroup() %>%
-         mutate(CategoryTerm = stringr::str_wrap(CategoryTerm, width = 30))
+         mutate(CategoryTerm2 = CategoryTerm,
+                CategoryTerm = stringr::str_wrap(CategoryTerm, width = 30))
       
       datatab <- dplyr::filter(toridge,
-                               CategoryTerm %in% unique(toproplot$CategoryTerm)) #%>% 
-         #dplyr::left_join(.,catid2PValue, by = "CategoryID") #%>%
+                               CategoryTerm %in% unique(toproplot$CategoryTerm2)) #%>% 
+      #dplyr::left_join(.,catid2PValue, by = "CategoryID") #%>%
       
       summtab <-  dplyr::group_by(datatab, CategoryTerm) %>%
          dplyr::summarise(meadianlo2FC = median(log2FC))
       
       datatab <- left_join(datatab, summtab, by = "CategoryTerm") %>% ungroup() %>%
          dplyr::arrange(-meadianlo2FC) %>% filter(!NGenes <= 2) #%>%
-         #dplyr::mutate(FDR = round(FDR, 4),
-         #              PValue = round(PValue, 4))
+      #dplyr::mutate(FDR = round(FDR, 4),
+      #              PValue = round(PValue, 4))
       
       zero_range <- function(x) {
          if (length(x) == 1) return(TRUE)
@@ -64,7 +60,7 @@ ridgeplotRoast <- function(roastresult,
       
       pvals <- dplyr::pull(datatab, eval(as.name(colorby)))
       
-      if(isEmpty(pvals)){stop("Error: no terms to plot")}
+      #if(isEmpty(pvals)){stop("Error: no terms to plot")}
       
       if (zero_range(pvals) == TRUE){
          maxpval <- max(pvals)
