@@ -7,7 +7,8 @@
 propChangePlot <- function(roastresult,
                            show_n_terms = 25,
                            colorby = "FDR",
-                           top_n_by = "NGenes"){ # one of "Difference", "NGenes", "PValue" or "FDR"
+                           top_n_by = "NGenes", # one of "Difference", "NGenes", "PValue" or "FDR"
+                           at_least_n_genes = 0){ 
    
    # Load required packages ----
    
@@ -19,23 +20,23 @@ propChangePlot <- function(roastresult,
    
    # Wrangle/prep data -----
    
-   roastOutput <- roastresult$roastOutput
+   roastOutput <- roastresult$roastOutput %>% filter(NGenes >= at_least_n_genes)
    
-   toproplot <- dplyr::select(roast_result$roastOutput,
+   toproplot <- dplyr::select(roastOutput,
                               NGenes, Direction, PropUp, PropDown, CategoryTerm,
                               FDR, PValue) %>%
       #dplyr::top_n(n = show_n_terms,
-       #            wt = NGenes) %>%
+      #            wt = NGenes) %>%
       dplyr::mutate(DiffProp = abs(PropUp - PropDown),
                     PropDown = -PropDown) %>%
       dplyr::top_n(n = show_n_terms,
                    wt = if(top_n_by == "Difference"){DiffProp}
-                           else if(top_n_by == "NGenes"){NGenes} 
-                                   else if(top_n_by == "PValue"){-PValue}
-                                           else if(top_n_by == "FDR"){-FDR}
-                   ) %>%
+                   else if(top_n_by == "NGenes"){NGenes} 
+                   else if(top_n_by == "PValue"){-PValue}
+                   else if(top_n_by == "FDR"){-FDR}
+      ) %>%
       #dplyr::mutate(FDR = round(FDR, 4),
-                    #PValue = round(PValue, 4)) %>%
+      #PValue = round(PValue, 4)) %>%
       tidyr::pivot_longer(cols = c(PropDown, PropUp),
                           names_to = "PropDirection",
                           values_to = "Proportion") %>%
@@ -87,7 +88,7 @@ propChangePlot <- function(roastresult,
                 hjust = +1.85)+
       scale_y_continuous(expand=c(0.2,0), limits=c(-1, 1))+
       labs(title = "Proportion of Up- or Down-regulated Proteins by Category", 
-          subtitle= "Positive values = Proportion of up-regulated proteins in category",
+           subtitle= "Positive values = Proportion of up-regulated proteins in category",
            x="Biological category", y = "Proportion of Proteins",
            color = colorby,
            size = "N Genes per set",

@@ -1,11 +1,11 @@
 ## Stand-alone script for running limma::roast starting from a typical Limma input ----
-## enrichRoast script. v 0.1 . Miguel Cosenza 24.03.2020 
+## enrichRoast script. v 0.2 . Miguel Cosenza 14.09.2020 
 
 ## PLEASE MODIFY THE INPUT IN THE SCRIPT BY ANSWERING THE QUESIONS
 
 ## PLEASE GIVE A CODE TO IDENTIFY YOUR DATA ----
 
-datasetcode <- "Dataset code"
+datasetcode <- "Data code"
 
 ## *-1. WHICH DATABASE WOULD YOU LIKE TO EXPLORE? (one of "GO", "KEGG", "REACTOME" or "MSIGDB") ----
 
@@ -13,8 +13,8 @@ enrichFunc <- "GO"
 
 ## *-2. ORGANISM DATABASE (Please input the name of the Bioconductor org.db you need: i.e. "org.Hs.eg.db" for human) ----
 
-orgDB <- "org.Mm.eg.db"
-species <- "Mus musculus" # this can be any resulting from calling msigdbr::msigdbr_show_species()
+orgDB <- "org.Hs.eg.db"
+species <- "Homo sapiens" # this can be any resulting from calling msigdbr::msigdbr_show_species()
 
 ## *-3. WHAT ID TYPE ARE YOU USING? (i.e. "SYMBOL", "UNIPROT", "ENTREZID") ----
 
@@ -29,21 +29,21 @@ geneIDtype <- "UNIPROT"
 # minSetSize = 5
 # maxSetSize = 80 
 
-minSetSize = 10 
-maxSetSize = 300
+minSetSize = 5 
+maxSetSize = 55
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS -----
 # set cutoff_by = "PValue" if you have heterogeneos data and want to filter by non-adjusted p-values.
 
-pvalueCutoff <- 0.05
+pvalueCutoff <- 0.01
 cutoff_by <- "FDR" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
 
 ## *-6 EXPERIMENTAL DESIGN ----
 
 ### Define experimental design ####
 
-condition1 <- 6 # number of samples associated to the first condition (treatment, stage, patient, etc...)
-condition2 <- 6 # number of samples associated to the second condition 
+condition1 <- 11 # number of samples associated to the first condition (treatment, stage, patient, etc...)
+condition2 <- 11 # number of samples associated to the second condition 
 
 Conditions <- c("Control", "Treatment") # condition1, condistion2
 
@@ -52,22 +52,30 @@ Conditions <- c("Control", "Treatment") # condition1, condistion2
 ### * 7.1. PROPORTIONS PLOT ---
 
 #### * 7.1.1 HOW MANY ENRICHED TERMNS DO YOU WANT TO PLOT?
-show_n_termsprop <- 30 # how many enriched terms do you want to plot?
+show_n_termsprop <- 10 # how many enriched terms do you want to plot?
 
 #### * 7.1.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 # Recomended: NOT MODIFY: this way the Color-coding for the plots will be the same as cutoff_by
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
 colorbyprop <- cutoff_by 
 
+### * 7.1.3 MINIMAL NUMBER OF PROTEINS/GENES PER PATHWAY TO CONSIDER FOR PLOTTING
+
+at_least_n_genesprop = 3
+
 ### * 7.2. RIDGELINE DENSITY PLOTS ---
 
 #### * 7.2.1 HOW MANY ENRICHED TERMNS DO YOU WANT TO PLOT?
-show_n_termsdens <- 30 # how many enriched terms do you want to plot?
+show_n_termsdens <- 10 # how many enriched terms do you want to plot?
 
 #### * 7.2.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 # Recomended: NOT MODIFY: this way the Color-coding for the plots will be the same as cutoff_by
 # Note: visualize with "PValue" is recomended when you set up FDR cutoff to 1 because of heterogeneos data
 colorbydens <- cutoff_by
+
+### * 7.2.3 MINIMAL NUMBER OF PROTEINS/GENES PER PATHWAY TO CONSIDER FOR PLOTTING
+
+at_least_n_genesrid = 3
 
 ## *-8. OPTIONAL PARAMETERS: FILL THESE UP DEPENDING ON WHAT YOU CHOOSE IN SECTION *-1. ----
 
@@ -96,7 +104,7 @@ exclusionList <- TRUE
 
 #### * 8.3.1 ORGANISM NAME IN KEGG TERMS (i.e. human = "hsa"; mouse = "mmu"; ...)
 
-organism <- 'mmu'
+organism <- 'hsa'
 
 ### * 8.4 IF 'MSIGDB' ENRICHMENT WILL BE PERFORMED ----
 
@@ -223,44 +231,52 @@ source("R/propChangePlot.R")
 prochangeplotdiff <- propChangePlot(roast_result,
                                     show_n_terms = show_n_termsprop,
                                     colorby = colorbyprop,
-                                    top_n_by = "Difference")
+                                    top_n_by = "Difference",
+                                    at_least_n_genes = at_least_n_genesprop)
 
 prochangeplotngenes <- propChangePlot(roast_result,
                                       show_n_terms = show_n_termsprop,
                                       colorby = colorbyprop,
-                                      top_n_by = "NGenes")
+                                      top_n_by = "NGenes",
+                                      at_least_n_genes = at_least_n_genesprop)
 
 prochangeplotpval <- propChangePlot(roast_result,
-                                      show_n_terms = show_n_termsprop,
-                                      colorby = "PValue",
-                                      top_n_by = "PValue")
+                                    show_n_terms = show_n_termsprop,
+                                    colorby = "PValue",
+                                    top_n_by = "PValue",
+                                    at_least_n_genes = at_least_n_genesprop)
 
 prochangeplotfdr <- propChangePlot(roast_result,
-                                    show_n_terms = show_n_termsprop,
-                                    colorby = "FDR",
-                                    top_n_by = "FDR")
+                                   show_n_terms = show_n_termsprop,
+                                   colorby = "FDR",
+                                   top_n_by = "FDR",
+                                   at_least_n_genes = at_least_n_genesprop)
 
 source("R/ridgleplotRoast.R")
 
 ridgelineroastdiff <- ridgeplotRoast(roast_result,
                                      show_n_terms = show_n_termsdens,
                                      colorby = colorbydens,
-                                     top_n_by = "Difference")
+                                     top_n_by = "Difference",
+                                     at_least_n_genes = at_least_n_genesrid)
 
 ridgelineroastngenes <- ridgeplotRoast(roast_result,
                                        show_n_terms = show_n_termsdens,
                                        colorby = colorbydens,
-                                       top_n_by = "NGenes")
+                                       top_n_by = "NGenes",
+                                       at_least_n_genes = at_least_n_genesrid)
 
 ridgelineroastpval <- ridgeplotRoast(roast_result,
                                      show_n_terms = show_n_termsdens,
                                      colorby = "PValue",
-                                     top_n_by = "PValue")
+                                     top_n_by = "PValue",
+                                     at_least_n_genes = at_least_n_genesrid)
 
 ridgelineroastfdr <- ridgeplotRoast(roast_result,
                                     show_n_terms = show_n_termsdens,
                                     colorby = "FDR",
-                                    top_n_by = "FDR")
+                                    top_n_by = "FDR",
+                                    at_least_n_genes = at_least_n_genesrid)
 ## Generate outputs ----
 
 ### Outputs for tabular data 
@@ -398,8 +414,8 @@ prochttofigngenes
 
 prochangeplotpval <- prochangeplotpval + 
         labs(caption = paste0(datasetcode," // ","Showing top ",show_n_termsprop," terms by non-adjusted p-value"),
-              subtitle = paste("Positive values = Proportion of up-regulated proteins in",
-                                Conditions[2]))+
+             subtitle = paste("Positive values = Proportion of up-regulated proteins in",
+                              Conditions[2]))+
         theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5, size = 11),
               axis.text.y = element_text(size = 11),
               panel.background = element_blank(),
