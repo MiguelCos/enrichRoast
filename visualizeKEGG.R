@@ -22,7 +22,7 @@ if (length(setdiff(biopackgs, rownames(installed.packages()))) > 0){
 
 ## HOW MANY KEGG GENE SETS DO YOU WANT TO VISUALIZE? ----
 
-show_n_terms <- 30
+show_n_terms <- 10
 
 ## HOW DO YOU WANT TO SELECT THE TOP N TERMS? (BY N GENES PER TERM "NGenes" OR by bigger differences in the proportions "Difference") ----
 
@@ -36,6 +36,7 @@ library(pathview)
 library(magrittr)
 library(pathview)
 library(dplyr)
+library(stringr)
 
 ### SCRIPT EXECUTION ----
 
@@ -59,10 +60,16 @@ names(expr_data) <- log2fcs$ENTREZID
 
 keggpaths <- log2fcs$CategoryID %>% str_sub(string = ., start = 4, end = 8) %>% unique()
 
-
 for (i in 1:show_n_terms){
             pathview(gene.data = expr_data, pathway.id = keggpaths[i],
                      species = organism, kegg.dir = ".", kegg.native = TRUE,same.layer=TRUE)
 }
 
+if (dir.exists("KEGG_pathways") == FALSE){dir.create("KEGG_pathways")}
 
+kegg_files <- list.files()
+kegg_files <- kegg_files[c(str_which(kegg_files, pattern = ".png$"), 
+                str_which(kegg_files, pattern = ".xml$"))]
+
+file.copy(kegg_files, "KEGG_pathways")
+unlink(kegg_files)

@@ -1,5 +1,5 @@
 ## Stand-alone script for running limma::roast starting from a typical Limma input ----
-## enrichRoast script. v 0.2 . Miguel Cosenza 14.09.2020 
+## enrichRoast script. v 0.3 . Miguel Cosenza 21.09.2020 
 
 ## PLEASE MODIFY THE INPUT IN THE SCRIPT BY ANSWERING THE QUESIONS
 
@@ -29,23 +29,34 @@ geneIDtype <- "UNIPROT"
 # minSetSize = 5
 # maxSetSize = 80 
 
-minSetSize = 5 
-maxSetSize = 55
+minSetSize = 15
+maxSetSize = 300
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS -----
 # set cutoff_by = "PValue" if you have heterogeneos data and want to filter by non-adjusted p-values.
 
-pvalueCutoff <- 0.01
-cutoff_by <- "FDR" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
+pvalueCutoff <- 0.5
+cutoff_by <- "PValue" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
 
 ## *-6 EXPERIMENTAL DESIGN ----
 
 ### Define experimental design ####
 
+## How many groups do you have? options: "one" or "two"
+
+ngroups <- "one"
+
+# Modify here if you have two groups to compare
+
 condition1 <- 11 # number of samples associated to the first condition (treatment, stage, patient, etc...)
 condition2 <- 11 # number of samples associated to the second condition 
 
 Conditions <- c("Control", "Treatment") # condition1, condistion2
+
+# Modify here if you have only 1 group (i.e. only rations)
+
+num_replicates <- 2
+condition <- "KO-over-wt"
 
 ## *-7. VISUALIZATION PARAMTERS: ----
 
@@ -114,9 +125,9 @@ organism <- 'hsa'
 # subcategory = "CP"
 # specific_category = "NABA"
 
-category = NULL # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
-subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
-specific_category = NULL  # i.e. "NABA"... A string that can be used to subset your categories.
+category = "C2" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+subcategory = "CP" # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
+specific_category = "NABA"  # i.e. "NABA"... A string that can be used to subset your categories.
 
 ## PLEASE RUN THE NEXT LINES OF CODE TO CORROBORATE IF YOU HAVE INSTALLED THE REQUIRED PACKAGES ----
 # Note: If some installation is needed, it could take a few minutes to finish.
@@ -149,12 +160,22 @@ library(ggplot2)
 
 ## Define experimental design ####
 
+if (ngroups == "two"){
+
 experiment <- c(rep(0,condition1),rep(1,condition2))
 design <- model.matrix(~experiment)
 Paired <- FALSE
+} else if(ngroups == "one"){
+        experiment <- c(rep(1,num_replicates))
+        design <- matrix(experiment,nrow = length(experiment))
+        Paired <- FALSE
+}
+        
+        
 ## Load Limma input ####
 
-tabular_data <- read.delim(file = here::here("Data/input_limma.txt"), header = TRUE, stringsAsFactors = FALSE,
+tabular_data <- read.delim(file = here::here("Data/input_limma.txt"), 
+                           header = TRUE, stringsAsFactors = FALSE,
                            sep = "\t")
 
 ## Run roast function ----
