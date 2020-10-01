@@ -3,8 +3,7 @@
 #data = tabular_data
 #geneIDtype = geneIDtype
 #orgDB = orgDB
-#design = design
-#n_rotations = 99
+#design = matrix(experiment,nrow = length(experiment))
 #minSetSize = minSetSize
 #maxSetSize = maxSetSize
 #pvalueCutoff = pvalueCutoff
@@ -165,22 +164,22 @@ roastGO <- function(data,
    
    # Get log2FC information from Limma and reformat output ----
    if (Paired == TRUE){
-   suppressWarnings(
-      suppressMessages(
-   log2FCs <- dplyr::mutate(limma_tab,
-                            ID = row.names(limma_tab)) %>%  
-      dplyr::select(ID, log2FC = eval(dim(.)[2]-5)) %>% 
-      dplyr::left_join(., genesinterm, by = "ID")  %>%
-      dplyr::left_join(., goterm_n_iddf, by = c("GOID", "GOTERM")) %>%
-      dplyr::rename(CategoryID = GOID, CategoryTerm = GOTERM) %>%
-      dplyr::left_join(.,fdrnterm, by = "CategoryTerm") %>%
-      dplyr::filter(is.na(FDR) == FALSE)
-      ))
+      suppressWarnings(
+         suppressMessages(
+            log2FCs <- dplyr::mutate(limma_tab,
+                                     ID = ID) %>%  
+               dplyr::select(ID, log2FC = eval(dim(.)[2]-5)) %>% 
+               dplyr::left_join(., genesinterm, by = "ID")  %>%
+               dplyr::left_join(., goterm_n_iddf, by = c("GOID", "GOTERM")) %>%
+               dplyr::rename(CategoryID = GOID, CategoryTerm = GOTERM) %>%
+               dplyr::left_join(.,fdrnterm, by = "CategoryTerm") %>%
+               dplyr::filter(is.na(FDR) == FALSE)
+         ))
    } else if (Paired == FALSE){
       suppressWarnings(
          suppressMessages(
             log2FCs <- dplyr::mutate(limma_tab,
-                                     ID =row.names(limma_tab)) %>%  
+                                     ID = ID) %>%  
                dplyr::select(ID, log2FC = logFC) %>% 
                dplyr::left_join(., genesinterm, by = "ID")  %>%
                dplyr::left_join(., goterm_n_iddf, by = c("GOID", "GOTERM")) %>%

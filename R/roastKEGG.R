@@ -62,14 +62,17 @@ roastKEGG <- function(data,
          
       } else {
          
-         premat2 <- dplyr::filter(data, is.na(ID) == FALSE,
-                                  !Name %in% .$Name[which(duplicated(.$Name))]) %>% 
+         premat1 <- dplyr::rename(data, Name = ID)
+         
+         premat2 <- dplyr::filter(premat1, 
+                                  is.na(Name) == FALSE,
+                                  !Name %in% premat1$Name[which(duplicated(premat1$Name))]) %>% 
             dplyr::distinct() %>% na.omit()
          
-         genesindata <- premat2$ID
+         genesindata <- premat2$Name %>% as.character()
          
          premat3 <- dplyr::select(premat2,
-                                  -ID) 
+                                  -Name) 
          
          matrix1 <- as.matrix(premat3)
          
