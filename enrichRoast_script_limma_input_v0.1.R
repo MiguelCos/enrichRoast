@@ -135,7 +135,7 @@ specific_category = "NABA"  # i.e. "NABA"... A string that can be used to subset
 ### Install required packages if necessary
 
 packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2", "qdapTools", "reshape2",
-              "backports", "statmod", "forcats")
+              "backports", "statmod", "forcats", "ggridges")
 
 biopackgs <- c(orgDB, "limma", "reactome.db", "clusterProfiler",
                "msigdbr", "KEGGREST", "AnnotationDbi", "GO.db")
