@@ -166,9 +166,8 @@ roastGO <- function(data,
    if (Paired == TRUE){
       suppressWarnings(
          suppressMessages(
-            log2FCs <- dplyr::mutate(limma_tab,
-                                     ID = ID) %>%  
-               dplyr::select(ID, log2FC = eval(dim(.)[2]-5)) %>% 
+            log2FCs <- dplyr::mutate(limma_tab, ID = rownames(limma_tab)) %>%  
+               dplyr::select(ID, log2FC = eval(dim(.)[2]-6)) %>% 
                dplyr::left_join(., genesinterm, by = "ID")  %>%
                dplyr::left_join(., goterm_n_iddf, by = c("GOID", "GOTERM")) %>%
                dplyr::rename(CategoryID = GOID, CategoryTerm = GOTERM) %>%
@@ -178,8 +177,7 @@ roastGO <- function(data,
    } else if (Paired == FALSE){
       suppressWarnings(
          suppressMessages(
-            log2FCs <- dplyr::mutate(limma_tab,
-                                     ID = ID) %>%  
+            log2FCs <- dplyr::mutate(limma_tab, ID = rownames(limma_tab)) %>%  
                dplyr::select(ID, log2FC = logFC) %>% 
                dplyr::left_join(., genesinterm, by = "ID")  %>%
                dplyr::left_join(., goterm_n_iddf, by = c("GOID", "GOTERM")) %>%
