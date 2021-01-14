@@ -125,9 +125,9 @@ organism <- 'hsa'
 # subcategory = "CP"
 # specific_category = "NABA"
 
-category = "C2" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
-subcategory = "CP" # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
-specific_category = "NABA"  # i.e. "NABA"... A string that can be used to subset your categories.
+category = NULL # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
+specific_category = NULL  # i.e. "NABA"... A string that can be used to subset your categories.
 
 ## PLEASE RUN THE NEXT LINES OF CODE TO CORROBORATE IF YOU HAVE INSTALLED THE REQUIRED PACKAGES ----
 # Note: If some installation is needed, it could take a few minutes to finish.
@@ -176,7 +176,7 @@ Paired <- FALSE
 
 tabular_data <- read.delim(file = here::here("Data/input_limma.txt"), 
                            header = TRUE, stringsAsFactors = FALSE,
-                           sep = "\t")
+                           sep = "\t") %>% mutate(ID = as.character(ID))
 
 ## Run roast function ----
 
