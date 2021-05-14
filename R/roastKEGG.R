@@ -259,7 +259,7 @@ roastKEGG <- function(data,
       suppressWarnings(
          suppressMessages(
             limma_tab <- topTable(limma_out2, 
-                                  number = Inf,,
+                                  number = Inf,
                                   coef = limma_coef)
          ))
       
