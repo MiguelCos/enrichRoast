@@ -1,4 +1,17 @@
 ## roastMSigDB function ----
+
+data = tabular_data
+geneIDtype = "UNIPROT"
+orgDB = orgDB
+design <- model.matrix(~experiment)
+minSetSize = minSetSize
+maxSetSize = maxSetSize
+pvalueCutoff = pvalueCutoff
+species = "Homo sapiens"
+category = category
+subcategory = NULL
+cutoff_by = "FDR"
+
 roastMSigDB <- function(data,
                         geneIDtype = "SYMBOL",
                         orgDB = "org.Hs.eg.db",
@@ -11,7 +24,8 @@ roastMSigDB <- function(data,
                         maxSetSize = 200,
                         pvalueCutoff = 0.05,
                         cutoff_by = "FDR", # one of "FDR" or "PValue"
-                        Paired = FALSE){
+                        Paired = FALSE,
+                        limma_coef = 2){
       
       ## Load required packages ----  
       require(orgDB, character.only = TRUE) || stop(paste("package", orgDB, "is required", sep=" "))
@@ -31,7 +45,7 @@ roastMSigDB <- function(data,
       mapentrez <- clusterProfiler::bitr(geneID = genenames,
                                          fromType = geneIDtype,
                                          toType = "SYMBOL",
-                                         OrgDb = eval(as.name(orgDB))) %>% na.omit()
+                                         OrgDb = orgDB) %>% na.omit()
       ))
       
       
@@ -58,10 +72,9 @@ roastMSigDB <- function(data,
       
       } else {
          
-         premat2 <- dplyr::filter(data, is.na(eval(as.name(geneIDtype))) == FALSE) %>% 
+         premat2 <- dplyr::filter(data, is.na(ID) == FALSE) %>% 
             dplyr::distinct() %>% na.omit() %>% 
-            dplyr::rename(ID = SYMBOL) %>% 
-            dplyr::select(ID,2:eval(dim(data)[2]-1), -1) %>%
+            dplyr::select(ID,2:eval(dim(data)[2])) %>%
             dplyr::filter(!ID %in% .$ID[which(duplicated(.$ID))])
          
          
@@ -172,7 +185,9 @@ roastMSigDB <- function(data,
       
       suppressWarnings(
          suppressMessages(
-            limma_tab <- topTable(limma_out2, number = dim(matrix1)[1])
+            limma_tab <- topTable(limma_out2, 
+                                  number = Inf,
+                                  coef = limma_coef)
          ))
       
       # Get log2FC information from Limma and reformat output ----

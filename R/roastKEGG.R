@@ -8,7 +8,8 @@ roastKEGG <- function(data,
                       pvalueCutoff = 0.05,
                       cutoff_by = "FDR", # one of "FDR" or "PValue"
                       exclusionList = TRUE,
-                      Paired = FALSE) {
+                      Paired = FALSE,
+                      limma_coef = 2) {
       
    ## Load required packages ----
       
@@ -250,14 +251,16 @@ roastKEGG <- function(data,
       
          suppressWarnings(suppressMessages(
       limma_out <- lmFit(object = matrix1,
-                               design = design)
+                         design = design)
          ))
       
       limma_out2 <- eBayes(limma_out)
       
       suppressWarnings(
          suppressMessages(
-            limma_tab <- topTable(limma_out2, number = dim(matrix1)[1])
+            limma_tab <- topTable(limma_out2, 
+                                  number = Inf,,
+                                  coef = limma_coef)
          ))
       
       # Get log2FC information from Limma and reformat output ----

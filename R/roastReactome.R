@@ -24,7 +24,8 @@ roastReactome <- function(data,
                           cutoff_by = "FDR", # one of "FDR" or "PValue"
                           exclusionList = TRUE,
                           species = "Homo sapiens",
-                          Paired = FALSE){
+                          Paired = FALSE,
+                          limma_coef = 2){
       
       ## Load required packages
       require(orgDB, character.only = TRUE) || stop(paste("package", orgDB, "is required", sep=" "))
@@ -268,7 +269,9 @@ roastReactome <- function(data,
    
    suppressWarnings(
       suppressMessages(
-         limma_tab <- topTable(limma_out, number = dim(matrix1)[1], coef = 2)
+         limma_tab <- topTable(limma_out, 
+                               number = Inf,
+                               coef = limma_coef)
       ))
    
    # Get log2FC information from Limma and reformat output ----

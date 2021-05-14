@@ -29,14 +29,14 @@ geneIDtype <- "UNIPROT"
 # minSetSize = 5
 # maxSetSize = 80 
 
-minSetSize = 15
+minSetSize = 20
 maxSetSize = 300
 
 ## *-5. P-VALUE CUTOFF AFTER FDR CONTROL TO CONSIDER A GENE SET AS ENRICHED AND NUMBER OF ROTATIONS -----
 # set cutoff_by = "PValue" if you have heterogeneos data and want to filter by non-adjusted p-values.
 
-pvalueCutoff <- 0.5
-cutoff_by <- "PValue" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
+pvalueCutoff <- 0.05
+cutoff_by <- "FDR" # this must be "FDR" or "PValue". "FDR" is recomender unless you are doing exploratory analysis.
 
 ## *-6 EXPERIMENTAL DESIGN ----
 
@@ -44,19 +44,24 @@ cutoff_by <- "PValue" # this must be "FDR" or "PValue". "FDR" is recomender unle
 
 ## How many groups do you have? options: "one" or "two"
 
-ngroups <- "one"
+ngroups <- "two"
 
 # Modify here if you have two groups to compare
 
-condition1 <- 11 # number of samples associated to the first condition (treatment, stage, patient, etc...)
-condition2 <- 11 # number of samples associated to the second condition 
+condition1 <- 14 # number of samples associated to the first condition (treatment, stage, patient, etc...)
+condition2 <- 14 # number of samples associated to the second condition 
 
-Conditions <- c("Control", "Treatment") # condition1, condistion2
+Conditions <- c("Day1", "Day2") # condition1, condistion2 
+
+## note: condition1 should be your first X columns in the dataset 
+##       condition2 should be your last X columns in the dataset
+##       Then the algorithm will compare condition2 vs condition1
+## condtion2 / condtion1
 
 # Modify here if you have only 1 group (i.e. only rations)
 
-num_replicates <- 2
-condition <- "KO-over-wt"
+#num_replicates <- 2
+#condition <- "KO-over-wt" # example input
 
 ## *-7. VISUALIZATION PARAMTERS: ----
 
@@ -72,7 +77,7 @@ colorbyprop <- cutoff_by
 
 ### * 7.1.3 MINIMAL NUMBER OF PROTEINS/GENES PER PATHWAY TO CONSIDER FOR PLOTTING
 
-at_least_n_genesprop = 3
+at_least_n_genesprop = 1
 
 ### * 7.2. RIDGELINE DENSITY PLOTS ---
 
@@ -86,7 +91,7 @@ colorbydens <- cutoff_by
 
 ### * 7.2.3 MINIMAL NUMBER OF PROTEINS/GENES PER PATHWAY TO CONSIDER FOR PLOTTING
 
-at_least_n_genesrid = 3
+at_least_n_genesrid = 1
 
 ## *-8. OPTIONAL PARAMETERS: FILL THESE UP DEPENDING ON WHAT YOU CHOOSE IN SECTION *-1. ----
 
@@ -96,7 +101,7 @@ at_least_n_genesrid = 3
 
 #### * 8.1.1. WHICH GO ONTOLOGY YOU DO WANT TO EXPLORE? (one of: "MF", "CC" or "BP") ----
 
-ontology = "BP"
+ontology = "MF"
 
 #### * 8.1.2. DO YOU WANT TO REMOVE REDUNDANT GO TERMS?
 
@@ -125,7 +130,7 @@ organism <- 'hsa'
 # subcategory = "CP"
 # specific_category = "NABA"
 
-category = NULL # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
+category = "H" # Any of the main categories presented here: https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp
 subcategory = NULL # Any subcategory within the main categories presented in the link above (i.e. "REACTOME", "BIOCARTA", "PID"...)
 specific_category = NULL  # i.e. "NABA"... A string that can be used to subset your categories.
 
@@ -134,7 +139,8 @@ specific_category = NULL  # i.e. "NABA"... A string that can be used to subset y
 
 ### Install required packages if necessary
 
-packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2", "qdapTools", "reshape2",
+packages <- c("dplyr", "here", "stringr", "tidyr", "ggplot2", 
+              "qdapTools", "reshape2",
               "backports", "statmod", "forcats", "ggridges")
 
 biopackgs <- c(orgDB, "limma", "reactome.db", "clusterProfiler",
@@ -173,10 +179,27 @@ Paired <- FALSE
         
         
 ## Load Limma input ####
-
 tabular_data <- read.delim(file = here::here("Data/input_limma.txt"), 
                            header = TRUE, stringsAsFactors = FALSE,
-                           sep = "\t") %>% mutate(ID = as.character(ID))
+                           sep = "\t") %>% 
+        mutate(ID = as.character(ID))
+
+
+symb2unip <- clusterProfiler::bitr(geneID = tabular_data$ID,
+                                   fromType = "SYMBOL", toType = "UNIPROT",
+                                   OrgDb = orgDB, drop = FALSE) %>%
+        dplyr::rename(ID = SYMBOL)
+        
+
+tabular_data <- left_join(tabular_data,
+                          symb2unip, 
+                          by = "ID") %>%
+        dplyr::select(-ID) %>% 
+        dplyr::rename(ID = UNIPROT) %>% 
+        dplyr::relocate(ID) %>% 
+        filter(is.na(ID) == FALSE)
+
+
 
 ## Run roast function ----
 

@@ -3,7 +3,7 @@
 #data = tabular_data
 #geneIDtype = geneIDtype
 #orgDB = orgDB
-#design = matrix(experiment,nrow = length(experiment))
+#design <- model.matrix(~experiment)
 #minSetSize = minSetSize
 #maxSetSize = maxSetSize
 #pvalueCutoff = pvalueCutoff
@@ -20,7 +20,8 @@ roastGO <- function(data,
                     maxSetSize = 1506,
                     pvalueCutoff = 0.05,
                     cutoff_by = "FDR", # one of "FDR" or "PValue"
-                    Paired = FALSE){
+                    Paired = FALSE,
+                    limma_coef = 2){
    
    ## Load required packages ----
    require(orgDB, character.only = TRUE) #|| stop(paste("package", organism, "is required", sep = " "))
@@ -159,7 +160,9 @@ roastGO <- function(data,
    
    suppressWarnings(
       suppressMessages(
-         limma_tab <- topTable(limma_out2, number = dim(matrix1)[1])
+         limma_tab <- topTable(limma_out2, 
+                               number = Inf,
+                               coef = limma_coef)
       ))
    
    # Get log2FC information from Limma and reformat output ----
@@ -169,7 +172,7 @@ roastGO <- function(data,
             log2FCs <- dplyr::mutate(limma_tab, ID = rownames(limma_tab)) %>%  
                dplyr::select(ID, log2FC = eval(dim(.)[2]-6)) %>% 
                dplyr::left_join(., genesinterm, by = "ID")  %>%
-               dplyr::left_join(., goterm_n_iddf, by = c("GOID", "GOTERM")) %>%
+               dplyr::left_join(., goterm_n_iddf, by = c("GOID")) %>%
                dplyr::rename(CategoryID = GOID, CategoryTerm = GOTERM) %>%
                dplyr::left_join(.,fdrnterm, by = "CategoryTerm") %>%
                dplyr::filter(is.na(FDR) == FALSE)
@@ -180,7 +183,7 @@ roastGO <- function(data,
             log2FCs <- dplyr::mutate(limma_tab, ID = rownames(limma_tab)) %>%  
                dplyr::select(ID, log2FC = logFC) %>% 
                dplyr::left_join(., genesinterm, by = "ID")  %>%
-               dplyr::left_join(., goterm_n_iddf, by = c("GOID", "GOTERM")) %>%
+               dplyr::left_join(., goterm_n_iddf, by = c("GOID")) %>%
                dplyr::rename(CategoryID = GOID, CategoryTerm = GOTERM) %>%
                dplyr::left_join(.,fdrnterm, by = "CategoryTerm") %>%
                dplyr::filter(is.na(FDR) == FALSE)

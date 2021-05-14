@@ -6,3 +6,13 @@
 
 *.tsv
 temp.R
+*.txt
+*.xlsx
+*.log
+temptest.R
+temp_check_limma.R
+
+temp/
+KEGG_pathways/
+Outputs/
+**/testing
