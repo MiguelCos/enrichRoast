@@ -185,22 +185,6 @@ tabular_data <- read.delim(file = here::here("Data/input_limma.txt"),
         mutate(ID = as.character(ID))
 
 
-symb2unip <- clusterProfiler::bitr(geneID = tabular_data$ID,
-                                   fromType = "SYMBOL", toType = "UNIPROT",
-                                   OrgDb = orgDB, drop = FALSE) %>%
-        dplyr::rename(ID = SYMBOL)
-        
-
-tabular_data <- left_join(tabular_data,
-                          symb2unip, 
-                          by = "ID") %>%
-        dplyr::select(-ID) %>% 
-        dplyr::rename(ID = UNIPROT) %>% 
-        dplyr::relocate(ID) %>% 
-        filter(is.na(ID) == FALSE)
-
-
-
 ## Run roast function ----
 
 if (enrichFunc == "GO"){
