@@ -57,7 +57,7 @@ roastMSigDB <- function(data,
       
       premat2 <- dplyr::filter(data, is.na(eval(as.name(geneIDtype))) == FALSE) %>% 
          dplyr::distinct() %>% na.omit() %>% 
-         dplyr::rename(ID = SYMBOL) %>% 
+         dplyr::rename(ID = matches("SYMBOL")) %>% 
          dplyr::select(ID,2:eval(dim(data)[2]-1), -1) %>%
          dplyr::filter(!ID %in% .$ID[which(duplicated(.$ID))])
       
@@ -151,7 +151,7 @@ roastMSigDB <- function(data,
                                      gs_id = row.names(roast_out)) %>% 
             dplyr::left_join(.,pathterm_n_iddf,
                              by = "gs_id") %>% 
-            dplyr::rename(CategoryID = gs_id, CategoryTerm = gs_name)%>%
+            dplyr::rename(CategoryID = matches("gs_id"), CategoryTerm = matches("gs_name"))%>%
             dplyr::left_join(.,fry_out, by = "CategoryID")
          
       ))

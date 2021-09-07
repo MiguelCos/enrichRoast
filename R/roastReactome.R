@@ -60,7 +60,7 @@ roastReactome <- function(data,
       suppressMessages(suppressWarnings(
          premat2 <- dplyr::select(premat1,
                                   -all_of(geneIDtype)) %>%  
-            dplyr::rename(Name = ENTREZID) %>% 
+            dplyr::rename(Name = matches("ENTREZID")) %>% 
             dplyr::filter(is.na(Name) == FALSE,
                           !Name %in% .$Name[which(duplicated(.$Name))]) %>% 
             dplyr::distinct() %>% na.omit()
@@ -197,7 +197,7 @@ roastReactome <- function(data,
                                      col2 = "PATHID") %>% 
                   dplyr::left_join(., index2id, by = "index") %>% 
                   dplyr::select(-index) %>% 
-                  dplyr::rename(ENTREZID = ID)
+                  dplyr::rename(ENTREZID = matches("ID"))
    
    
    
@@ -241,7 +241,7 @@ roastReactome <- function(data,
                                      PATHID = row.names(roast_out)) %>% 
             dplyr::left_join(.,pathterm_n_iddf,
                              by = "PATHID") %>% 
-            dplyr::rename(CategoryID = PATHID, CategoryTerm = PATHNAME) %>%
+            dplyr::rename(CategoryID = matches("PATHID"), CategoryTerm = matches("PATHNAME")) %>%
             dplyr::left_join(.,fry_out, by = "CategoryID")
          
       ))
