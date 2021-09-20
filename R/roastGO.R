@@ -1,5 +1,6 @@
 ## roastGO function ----
 
+<<<<<<< HEAD
 data = tabular_data
 geneIDtype = geneIDtype
 orgDB = orgDB
@@ -10,6 +11,18 @@ pvalueCutoff = pvalueCutoff
 exclusionList = exclusionList
 Paired = FALSE
 ontology = "BP"
+=======
+#data = tabular_data
+#geneIDtype = geneIDtype
+#orgDB = orgDB
+#design <- model.matrix(~experiment)
+#minSetSize = minSetSize
+#maxSetSize = maxSetSize
+#pvalueCutoff = pvalueCutoff
+#exclusionList = exclusionList
+#Paired = FALSE
+#ontology = "BP"
+>>>>>>> bb2a7f2d6f2a21b1063e5b858d8ca3cefe4ded77
 
 roastGO <- function(data,
                     geneIDtype = "SYMBOL",
