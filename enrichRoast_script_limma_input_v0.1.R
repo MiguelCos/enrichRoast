@@ -48,10 +48,10 @@ ngroups <- "two"
 
 # Modify here if you have two groups to compare
 
-condition1 <- 14 # number of samples associated to the first condition (treatment, stage, patient, etc...)
-condition2 <- 14 # number of samples associated to the second condition 
+condition1 <- 38 # number of samples associated to the first condition (treatment, stage, patient, etc...)
+condition2 <- 28 # number of samples associated to the second condition 
 
-Conditions <- c("Day1", "Day2") # condition1, condistion2 
+Conditions <- c("Chemo", "Chemoradio") # condition1, condistion2 
 
 ## note: condition1 should be your first X columns in the dataset 
 ##       condition2 should be your last X columns in the dataset
@@ -68,7 +68,7 @@ Conditions <- c("Day1", "Day2") # condition1, condistion2
 ### * 7.1. PROPORTIONS PLOT ---
 
 #### * 7.1.1 HOW MANY ENRICHED TERMNS DO YOU WANT TO PLOT?
-show_n_termsprop <- 10 # how many enriched terms do you want to plot?
+show_n_termsprop <- 25 # how many enriched terms do you want to plot?
 
 #### * 7.1.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 # Recomended: NOT MODIFY: this way the Color-coding for the plots will be the same as cutoff_by
@@ -77,12 +77,12 @@ colorbyprop <- cutoff_by
 
 ### * 7.1.3 MINIMAL NUMBER OF PROTEINS/GENES PER PATHWAY TO CONSIDER FOR PLOTTING
 
-at_least_n_genesprop = 1
+at_least_n_genesprop = 2
 
 ### * 7.2. RIDGELINE DENSITY PLOTS ---
 
 #### * 7.2.1 HOW MANY ENRICHED TERMNS DO YOU WANT TO PLOT?
-show_n_termsdens <- 10 # how many enriched terms do you want to plot?
+show_n_termsdens <- 25 # how many enriched terms do you want to plot?
 
 #### * 7.2.2 VISUALIZE COLOR-CODING FOR "FDR" OR "PVALUE"  
 # Recomended: NOT MODIFY: this way the Color-coding for the plots will be the same as cutoff_by
@@ -91,7 +91,7 @@ colorbydens <- cutoff_by
 
 ### * 7.2.3 MINIMAL NUMBER OF PROTEINS/GENES PER PATHWAY TO CONSIDER FOR PLOTTING
 
-at_least_n_genesrid = 1
+at_least_n_genesrid = 2
 
 ## *-8. OPTIONAL PARAMETERS: FILL THESE UP DEPENDING ON WHAT YOU CHOOSE IN SECTION *-1. ----
 
@@ -101,7 +101,7 @@ at_least_n_genesrid = 1
 
 #### * 8.1.1. WHICH GO ONTOLOGY YOU DO WANT TO EXPLORE? (one of: "MF", "CC" or "BP") ----
 
-ontology = "MF"
+ontology = "BP"
 
 #### * 8.1.2. DO YOU WANT TO REMOVE REDUNDANT GO TERMS?
 

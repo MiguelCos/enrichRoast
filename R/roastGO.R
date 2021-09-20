@@ -1,15 +1,15 @@
 ## roastGO function ----
 
-#data = tabular_data
-#geneIDtype = geneIDtype
-#orgDB = orgDB
-#design <- model.matrix(~experiment)
-#minSetSize = minSetSize
-#maxSetSize = maxSetSize
-#pvalueCutoff = pvalueCutoff
-#exclusionList = exclusionList
-#Paired = FALSE
-#ontology = "MF"
+data = tabular_data
+geneIDtype = geneIDtype
+orgDB = orgDB
+design <- model.matrix(~experiment)
+minSetSize = minSetSize
+maxSetSize = maxSetSize
+pvalueCutoff = pvalueCutoff
+exclusionList = exclusionList
+Paired = FALSE
+ontology = "BP"
 
 roastGO <- function(data,
                     geneIDtype = "SYMBOL",
@@ -172,8 +172,8 @@ roastGO <- function(data,
             log2FCs <- dplyr::mutate(limma_tab, ID = rownames(limma_tab)) %>%  
                dplyr::select(ID, log2FC = eval(dim(.)[2]-6)) %>% 
                dplyr::left_join(., genesinterm, by = "ID")  %>%
-               dplyr::left_join(., goterm_n_iddf, by = c("GOID")) %>%
-               dplyr::rename(CategoryID = GOID, CategoryTerm = GOTERM) %>%
+               dplyr::left_join(., goterm_n_iddf, by = c("GOID", "GOTERM")) %>%
+               dplyr::rename(CategoryID = matches("GOID"), CategoryTerm = matches("GOTERM")) %>%
                dplyr::left_join(.,fdrnterm, by = "CategoryTerm") %>%
                dplyr::filter(is.na(FDR) == FALSE)
          ))
@@ -183,8 +183,8 @@ roastGO <- function(data,
             log2FCs <- dplyr::mutate(limma_tab, ID = rownames(limma_tab)) %>%  
                dplyr::select(ID, log2FC = logFC) %>% 
                dplyr::left_join(., genesinterm, by = "ID")  %>%
-               dplyr::left_join(., goterm_n_iddf, by = c("GOID")) %>%
-               dplyr::rename(CategoryID = GOID, CategoryTerm = GOTERM) %>%
+               dplyr::left_join(., goterm_n_iddf, by = c("GOID", "GOTERM")) %>%
+               dplyr::rename(CategoryID = matches("GOID"), CategoryTerm = matches("GOTERM")) %>%
                dplyr::left_join(.,fdrnterm, by = "CategoryTerm") %>%
                dplyr::filter(is.na(FDR) == FALSE)
          ))
