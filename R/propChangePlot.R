@@ -1,9 +1,9 @@
 ### propChangePlot function ----
-show_n_terms = show_n_termsprop
-colorby = colorbyprop
-top_n_by = "Difference"
-at_least_n_genes = at_least_n_genesprop
-roastresult <- roast_result
+#show_n_terms = show_n_termsprop
+#colorby = colorbyprop
+#top_n_by = "Difference"
+#at_least_n_genes = at_least_n_genesprop
+#roastresult <- roast_result
 
 propChangePlot <- function(roastresult,
                            show_n_terms = 25,
