@@ -1,16 +1,16 @@
 ## roastMSigDB function ----
 
-data = tabular_data
-geneIDtype = "UNIPROT"
-orgDB = orgDB
-design <- model.matrix(~experiment)
-minSetSize = minSetSize
-maxSetSize = maxSetSize
-pvalueCutoff = pvalueCutoff
-species = "Homo sapiens"
-category = category
-subcategory = NULL
-cutoff_by = "FDR"
+#data = tabular_data
+#geneIDtype = "UNIPROT"
+#orgDB = orgDB
+#design <- model.matrix(~experiment)
+#minSetSize = minSetSize
+#maxSetSize = maxSetSize
+#pvalueCutoff = pvalueCutoff
+#species = "Homo sapiens"
+#category = category
+#subcategory = NULL
+#cutoff_by = "FDR"
 
 roastMSigDB <- function(data,
                         geneIDtype = "SYMBOL",
