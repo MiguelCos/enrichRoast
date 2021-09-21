@@ -1,6 +1,5 @@
 ### ROAST - Reactome function ----
 
-
 #data = tabular_data
 #geneIDtype = "UNIPROT"
 #orgDB = "org.Mm.eg.db"
@@ -11,8 +10,20 @@
 #pvalueCutoff = 0.9
 #cutoff_by = "FDR" # one of "FDR" or "PValue"
 #exclusionList = TRUE
-#species = "Mus musculus"
+#species = "Homo sapiens"
 #Paired = FALSE
+
+#data = tomat
+#geneIDtype = "UNIPROT"
+#orgDB = "org.Hs.eg.db"
+#design = design_model1
+#contrast2 = 2
+#minSetSize = 30
+#maxSetSize = 500
+#pvalueCutoff = 0.05
+#cutoff_by = "PValue" # one of "FDR" or "PValue"
+#Paired = FALSE
+#limma_coef = 2
 
 roastReactome <- function(data, 
                           geneIDtype = "SYMBOL", 
@@ -198,7 +209,7 @@ roastReactome <- function(data,
                                      col2 = "PATHID") %>% 
                   dplyr::left_join(., index2id, by = "index") %>% 
                   dplyr::select(-index) %>% 
-                  dplyr::rename(ENTREZID = matches("ID"))
+                  dplyr::rename(ENTREZID = ID)
    
    
    
