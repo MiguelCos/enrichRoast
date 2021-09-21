@@ -16,6 +16,7 @@ roastGO <- function(data,
                     ontology = "MF",
                     orgDB = "org.Hs.eg.db", 
                     design,
+                    contrast2 = 2,
                     minSetSize = 1,
                     maxSetSize = 1506,
                     pvalueCutoff = 0.05,
@@ -113,14 +114,14 @@ roastGO <- function(data,
    # Run ROAST ----
    
    roast_out <- mroast(y = matrix1,
-                       contrast= ncol(design),
+                       contrast= contrast2,
                        design = design, 
                        nrot = 10, 
                        index = index) %>%
       dplyr::select(-PValue, -FDR, -PValue.Mixed, -FDR.Mixed)
    
    fry_out <- fry(y = matrix1,
-                  contrast= ncol(design),
+                  contrast= contrast2,
                   design = design, 
                   index = index) %>% 
       dplyr::mutate(CategoryID = row.names(.)) %>%

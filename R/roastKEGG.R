@@ -2,6 +2,7 @@ roastKEGG <- function(data,
                       geneIDtype = "SYMBOL",
                       orgDB = "org.Hs.eg.db",
                       organism = "mmu", # here the sintax should correspond with the  sintax
+                      contrast2 = 2,
                       design,
                       minSetSize = 1,
                       maxSetSize = 1000,
@@ -212,14 +213,14 @@ roastKEGG <- function(data,
       ## Run roast ----
 
       roast_out <- mroast(y = matrix1,
-                          contrast= ncol(design),
+                          contrast= contrast2,
                           design = design, 
                           nrot = 10, 
                           index = index) %>%
                    dplyr::select(-PValue, -FDR, -PValue.Mixed, -FDR.Mixed)
             
       fry_out <- fry(y = matrix1,
-                     contrast= ncol(design),
+                     contrast= contrast2,
                      design = design, 
                      index = index) %>% 
                dplyr::mutate(CategoryID = row.names(.)) %>%
