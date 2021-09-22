@@ -3,7 +3,11 @@
 #colorby = colorbyprop
 #top_n_by = "Difference"
 #at_least_n_genes = at_least_n_genesprop
-#roastresult <- roast_result
+#roastresult <- roastout
+#show_n_terms = 25
+#colorby = "PValue"
+#top_n_by = "NGenes" # one of "Difference", "NGenes", "PValue" or "FDR"
+#at_least_n_genes = 3
 
 propChangePlot <- function(roastresult,
                            show_n_terms = 25,
